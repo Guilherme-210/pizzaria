@@ -1,0 +1,17 @@
+{
+    "name": "pizzaria",
+    "private": true,
+    "author": "Guilherme Luiz Reis do Nascimento",
+    "description": "Full-stack application for Pizzaria project",
+    "workspaces": [
+        "frontend",
+        "backend"
+    ],
+    "scripts": {
+        "dev:frontend": "yarn workspace frontend dev",
+        "i:frontend": "yarn workspace frontend install",
+        "dev:backend": "yarn workspace backend dev",
+        "i:backend": "yarn workspace backend install",
+        "dev:all": "yarn dev:backend & yarn dev:frontend"
+    }
+}
