@@ -8,8 +8,10 @@
         "backend"
     ],
     "scripts": {
+        "build:frontend": "yarn workspace frontend build",
         "dev:frontend": "yarn workspace frontend dev",
         "i:frontend": "yarn workspace frontend install",
+        "build:backend": "yarn workspace backend build",
         "dev:backend": "yarn workspace backend dev",
         "i:backend": "yarn workspace backend install",
         "dev:all": "yarn dev:backend & yarn dev:frontend"
