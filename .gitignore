@@ -108,3 +108,8 @@ Thumbs.db
 test/
 test-*/
 test.*
+
+# =========================
+# Prisma
+# =========================
+/generated/prisma
