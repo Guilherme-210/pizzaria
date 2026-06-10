@@ -7,11 +7,9 @@
       "ES2020"
     ], // Bibliotecas de tipos incluídas
     "": "node", // Estratégia de resolução de módulos (Node.js)
-
     // Diretórios
     "outDir": "./dist", // Pasta de saída dos arquivos compilados
     "rootDir": "./src", // Pasta raiz dos arquivos fonte
-
     // Strict Type-Checking Options (TypeScript 5.6)
     "strict": true, // Ativa todas as verificações estritas
     "noImplicitAny": true, // Proíbe variáveis sem tipo explícito
@@ -21,7 +19,6 @@
     "strictPropertyInitialization": true, // Exige inicialização de propriedades de classe
     "noImplicitThis": true, // Erro quando 'this' tem tipo any implícito
     "alwaysStrict": true, // Emite "use strict" em todos os arquivos
-
     // Additional Checks
     "noUnusedLocals": true, // Erro para variáveis locais não utilizadas
     "noUnusedParameters": true, // Erro para parâmetros não utilizados
@@ -30,69 +27,103 @@
     "noUncheckedIndexedAccess": true, // Adiciona undefined ao acessar índices
     "noImplicitOverride": true, // Exige palavra-chave override ao sobrescrever
     "noPropertyAccessFromIndexSignature": false, // Permite obj.prop em tipos indexados
-
     // Module Resolution
     "esModuleInterop": true, // Interoperabilidade CommonJS e ES Modules
     "allowSyntheticDefaultImports": true, // Permite imports default sintéticos
     "resolveJsonModule": true, // Permite importar arquivos .json
     "isolatedModules": true, // Cada arquivo pode ser transpilado independentemente
-
     // Emit
     "declaration": false, // Não gera arquivos .d.ts de declaração
     "declarationMap": false, // Não gera sourcemaps para declarações
     "sourceMap": true, // Gera arquivos .map para debug
     "removeComments": true, // Remove comentários do código compilado
     "importHelpers": false, // Não importa helpers do tslib
-
     // Interop Constraints
     "forceConsistentCasingInFileNames": true, // Exige capitalização consistente em nomes de arquivo
     "skipLibCheck": true, // Pula verificação de tipos em bibliotecas
-
     // Type Acquisition
     "types": [
       "node"
     ], // Pacotes de tipos a incluir (@types/node)
-
     // Paths e Aliases
     "paths": {
       "@/*": [
         "./src/*"
       ],
+      "@configs": [
+        "./src/configs/index.ts"
+      ],
       "@configs/*": [
         "./src/configs/*"
+      ],
+      "@controllers": [
+        "./src/controllers/index.ts"
       ],
       "@controllers/*": [
         "./src/controllers/*"
       ],
+      "@models": [
+        "./src/models/index.ts"
+      ],
       "@models/*": [
         "./src/models/*"
+      ],
+      "@routes": [
+        "./src/routes/index.ts"
       ],
       "@routes/*": [
         "./src/routes/*"
       ],
+      "@schemas": [
+        "./src/schemas/index.ts"
+      ],
       "@schemas/*": [
         "./src/schemas/*"
+      ],
+      "@services": [
+        "./src/services/index.ts"
       ],
       "@services/*": [
         "./src/services/*"
       ],
+      "@shareds": [
+        "./src/shareds/index.ts"
+      ],
       "@shareds/*": [
         "./src/shareds/*"
+      ],
+      "@constants": [
+        "./src/shareds/constants/index.ts"
       ],
       "@constants/*": [
         "./src/shareds/constants/*"
       ],
+      "@errors": [
+        "./src/shareds/errors/index.ts"
+      ],
       "@errors/*": [
         "./src/shareds/errors/*"
+      ],
+      "@middlewares": [
+        "./src/shareds/middlewares/index.ts"
       ],
       "@middlewares/*": [
         "./src/shareds/middlewares/*"
       ],
+      "@utils": [
+        "./src/shareds/utils/index.ts"
+      ],
       "@utils/*": [
         "./src/shareds/utils/*"
       ],
+      "@types": [
+        "./src/types/index.ts"
+      ],
       "@types/*": [
         "./src/types/*"
+      ],
+      "@prisma": [
+        "./src/prisma/index.ts"
       ],
       "@prisma/*": [
         "./src/prisma/*"
