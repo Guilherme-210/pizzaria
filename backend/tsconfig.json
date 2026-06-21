@@ -3,9 +3,7 @@
     // Linguagem e Módulos
     "target": "ES2020", // Versão do JavaScript para compilação
     "module": "commonjs", // Sistema de módulos (CommonJS para Node.js)
-    "lib": [
-      "ES2020"
-    ], // Bibliotecas de tipos incluídas
+    "lib": ["ES2020"], // Bibliotecas de tipos incluídas
     "": "node", // Estratégia de resolução de módulos (Node.js)
 
     // Diretórios
@@ -49,63 +47,28 @@
     "skipLibCheck": true, // Pula verificação de tipos em bibliotecas
 
     // Type Acquisition
-    "types": [
-      "node"
-    ], // Pacotes de tipos a incluir (@types/node)
+    "types": ["node"], // Pacotes de tipos a incluir (@types/node)
 
     // Paths e Aliases
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@configs/*": [
-        "./src/configs/*"
-      ],
-      "@controllers/*": [
-        "./src/controllers/*"
-      ],
-      "@models/*": [
-        "./src/models/*"
-      ],
-      "@routes/*": [
-        "./src/routes/*"
-      ],
-      "@schemas/*": [
-        "./src/schemas/*"
-      ],
-      "@services/*": [
-        "./src/services/*"
-      ],
-      "@shareds/*": [
-        "./src/shareds/*"
-      ],
-      "@constants/*": [
-        "./src/shareds/constants/*"
-      ],
-      "@errors/*": [
-        "./src/shareds/errors/*"
-      ],
-      "@middlewares/*": [
-        "./src/shareds/middlewares/*"
-      ],
-      "@utils/*": [
-        "./src/shareds/utils/*"
-      ],
-      "@types/*": [
-        "./src/types/*"
-      ],
-      "@prisma/*": [
-        "./src/prisma/*"
-      ]
+      "@/*": ["./src/*"],
+      "@modules/*": ["./src/modules/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@configs/*": ["./src/configs/*"],
+      "@controllers/*": ["./src/controllers/*"],
+      "@models/*": ["./src/models/*"],
+      "@routes/*": ["./src/routes/*"],
+      "@schemas/*": ["./src/schemas/*"],
+      "@services/*": ["./src/services/*"],
+      "@shareds/*": ["./src/shareds/*"],
+      "@constants/*": ["./src/shareds/constants/*"],
+      "@errors/*": ["./src/shareds/errors/*"],
+      "@middlewares/*": ["./src/shareds/middlewares/*"],
+      "@utils/*": ["./src/shareds/utils/*"],
+      "@types/*": ["./src/types/*"],
+      "@prisma/*": ["./src/prisma/*"]
     }
   },
-  "include": [
-    "src"
-  ], // Arquivos a serem incluídos na compilação
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.spec.ts",
-    "**/*.test.ts"
-  ] // Arquivos/pastas excluídos
+  "include": ["src"], // Arquivos a serem incluídos na compilação
+  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"] // Arquivos/pastas excluídos
 }
