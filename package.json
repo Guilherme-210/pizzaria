@@ -1,19 +1,26 @@
 {
-    "name": "pizzaria",
-    "private": true,
-    "author": "Guilherme Luiz Reis do Nascimento",
-    "description": "Full-stack application for Pizzaria project",
-    "workspaces": [
-        "frontend",
-        "backend"
-    ],
-    "scripts": {
-        "build:frontend": "yarn workspace frontend build",
-        "dev:frontend": "yarn workspace frontend dev",
-        "i:frontend": "yarn workspace frontend install",
-        "build:backend": "yarn workspace backend build",
-        "dev:backend": "yarn workspace backend dev",
-        "i:backend": "yarn workspace backend install",
-        "dev:all": "yarn dev:backend & yarn dev:frontend"
-    }
+  "name": "pizzaria",
+  "private": true,
+  "author": "Guilherme Luiz Reis do Nascimento",
+  "description": "Full-stack application for Pizzaria project",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "build:frontend": "yarn workspace frontend build",
+    "dev:frontend": "yarn workspace frontend dev",
+    "i:frontend": "yarn workspace frontend add",
+    "build:backend": "yarn workspace backend build",
+    "dev:backend": "yarn workspace backend dev",
+    "i:backend": "yarn workspace backend add",
+    "dev:all": "yarn dev:backend & yarn dev:frontend",
+    "build:all": "yarn build:backend & yarn build:frontend",
+    "db:init": "yarn workspace backend prisma init",
+    "db:generate": "yarn workspace backend prisma generate",
+    "db:push": "yarn workspace backend prisma db push",
+    "db:migrate": "yarn workspace backend prisma migrate dev",
+    "db:deploy": "yarn workspace backend prisma migrate deploy",
+    "db:studio": "yarn workspace backend prisma studio"
+  }
 }
