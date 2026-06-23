@@ -60,13 +60,14 @@
       "@routes/*": ["./src/routes/*"],
       "@schemas/*": ["./src/schemas/*"],
       "@services/*": ["./src/services/*"],
-      "@shareds/*": ["./src/shareds/*"],
-      "@constants/*": ["./src/shareds/constants/*"],
-      "@errors/*": ["./src/shareds/errors/*"],
-      "@middlewares/*": ["./src/shareds/middlewares/*"],
-      "@utils/*": ["./src/shareds/utils/*"],
       "@types/*": ["./src/types/*"],
-      "@prisma/*": ["./src/prisma/*"]
+      "@lib/*": ["./src/lib/*"],
+      "@prisma/*": ["./src/prisma/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@constants/*": ["./src/shared/constants/*"],
+      "@errors/*": ["./src/shared/errors/*"],
+      "@middlewares/*": ["./src/shared/middlewares*"],
+      "@utils/*": ["./src/shared/utils/*"]
     }
   },
   "include": ["src"], // Arquivos a serem incluídos na compilação
