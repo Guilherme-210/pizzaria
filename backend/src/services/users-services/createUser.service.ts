@@ -1,5 +1,6 @@
 import { AppError } from "@/shared/errors/AppError";
 import prisma from "@lib/prisma";
+import { hash } from "bcryptjs";
 
 interface ICreateUserServices {
   name: string;
@@ -19,15 +20,19 @@ class CreateUserServices {
       throw new AppError("Usuário já existe", 409);
     }
 
+    const passwordHash = await hash(password, 10);
+
     const user = await prisma.user.create({
       data: {
         name: name,
         email: email,
-        password: password,
+        password: passwordHash,
       },
       select: {
         name: true,
         email: true,
+        role: true,
+        createdAt: true,
       },
     });
 
