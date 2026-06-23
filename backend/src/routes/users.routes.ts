@@ -1,6 +1,8 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { Request, Response, Router } from "express";
 
 import { CreateUserController } from "@/controllers/users-controllers/createUser.controller";
+import { authUserSchema, createUserSchema } from "@/schemas/user.schemas";
+import { validateSchema } from "@/shared/middlewares/valedate.schemas";
 
 const userRouter = Router();
 
@@ -15,16 +17,20 @@ userRouter.get("/users/:id", (req: Request, res: Response) => {
   res.json({ message: `Detalhes do usuário ${userId}` });
 });
 
-userRouter.post("/users", (req: Request, res: Response, next: NextFunction) => {
-  const createUserController = new CreateUserController();
+userRouter.post(
+  "/users",
+  validateSchema(createUserSchema),
+  new CreateUserController().handle,
+);
 
-  return createUserController.handle(req, res, next);
-});
-
-userRouter.post("/users/session", (_req: Request, res: Response) => {
-  // Lógica para autenticar o usuário
-  res.json({ message: "Usuário autenticado" });
-});
+userRouter.post(
+  "/users/session",
+  validateSchema(authUserSchema),
+  (_req: Request, res: Response) => {
+    // Lógica para autenticar o usuário
+    res.json({ message: "Usuário autenticado" });
+  },
+);
 
 userRouter.put("/users/:id", (req: Request, res: Response) => {
   const userId = req.params.id;
