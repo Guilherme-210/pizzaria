@@ -13,15 +13,32 @@ const validateSchema = (schema: any) => {
       return next();
     } catch (error) {
       if (error instanceof ZodError) {
-        return res
-          .status(400)
-          .json({
+        const missingRootObject = error.issues.find(
+          (issue) => issue.code === "invalid_type" && issue.path.length === 1,
+        );
+
+        if (missingRootObject) {
+          const field = missingRootObject.path[0];
+
+          const messages = {
+            body: "Nenhum dado foi enviado no corpo da requisição",
+            query: "Nenhum dado foi enviado na query da requisição",
+            params: "Nenhum parâmetro foi enviado na requisição",
+          };
+
+          return res.status(400).json({
             error: "Dados de entrada inválidos",
-            details: error.issues.map((issue) => ({
-              campo: issue.path.slice(1).join("."),
-              mensagem: issue.message,
-            })),
+            details: messages[field as keyof typeof messages],
           });
+        }
+
+        return res.status(400).json({
+          error: "Dados de entrada inválidos",
+          details: error.issues.map((issue) => ({
+            campo: issue.path.slice(1).join(".") || "geral",
+            mensagem: issue.message,
+          })),
+        });
       }
 
       return next(error);

@@ -3,6 +3,7 @@ import { Request, Response, Router } from "express";
 import { CreateUserController } from "@/controllers/users-controllers/createUser.controller";
 import { authUserSchema, createUserSchema } from "@/schemas/user.schemas";
 import { validateSchema } from "@/shared/middlewares/valedate.schemas";
+import { AuthUserController } from "@/controllers/users-controllers/authUser.controller";
 
 const userRouter = Router();
 
@@ -26,10 +27,7 @@ userRouter.post(
 userRouter.post(
   "/users/session",
   validateSchema(authUserSchema),
-  (_req: Request, res: Response) => {
-    // Lógica para autenticar o usuário
-    res.json({ message: "Usuário autenticado" });
-  },
+  new AuthUserController().handle
 );
 
 userRouter.put("/users/:id", (req: Request, res: Response) => {

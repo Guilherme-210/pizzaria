@@ -18,7 +18,7 @@ enum Role{
 }
 
 model User {
-  id        String     @id   @default(uuid())
+  id        String    @id   @default(uuid())
   name      String
   email     String    @unique
   password  String
@@ -31,7 +31,7 @@ model User {
 }
 
 model Category {
-  id        String     @id   @default(uuid())
+  id        String    @id @default(uuid())
   name      String
 
   createdAt DateTime  @default(now())
@@ -62,7 +62,7 @@ model Product {
 }
 
 model Order {
-  id        String     @id   @default(uuid())
+  id String           @id @default(uuid())
   table Int
   status Boolean      @default(false) // false = Pendente, true = Pronto
   draft Boolean       @default(true) // false ainda é rascunho, foi enviado para cozinha
@@ -77,7 +77,7 @@ model Order {
 }
 
 model Item {
-  id        String     @id   @default(uuid())
+  id          String           @id @default(uuid())
   amount      Int
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
