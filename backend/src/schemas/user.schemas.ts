@@ -24,3 +24,24 @@ export const authUserSchema = z.object({
       .min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
   }),
 });
+
+export const updateUserSchema = z.object({
+  body: z
+    .object({
+      name: z
+        .string({ message: "O nome é obrigatório" })
+        .min(1, { message: "O nome é obrigatório" })
+        .optional(),
+      email: z
+        .string({ message: "O e-mail é inválido" })
+        .email({ message: "O e-mail é inválido" })
+        .optional(),
+      password: z
+        .string({ message: "A senha deve ter no mínimo 6 caracteres" })
+        .min(6, { message: "A senha deve ter no mínimo 6 caracteres" })
+        .optional(),
+    })
+    .refine((data) => Object.keys(data).length > 0, {
+      message: "Pelo menos um campo deve ser enviado",
+    }),
+});
