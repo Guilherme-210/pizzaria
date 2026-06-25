@@ -5,7 +5,7 @@
   "main": "src/server.ts",
   "scripts": {
     "dev": "nodemon --exec \"tsx\" src/server.ts",
-    "build": "prisma generate && tsc && tsc-alias",
+    "build": "yarn prisma generate && tsc && tsc-alias",
     "start": "node -r tsconfig-paths/register dist/server.js",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
