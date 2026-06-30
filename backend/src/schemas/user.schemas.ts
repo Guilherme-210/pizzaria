@@ -14,7 +14,30 @@ export const createUserSchema = z.object({
     confirmPassword: z
       .string({ message: "A confirmação de senha é obrigatória" })
       .min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
-  }),
+  })
+    .superRefine((data, ctx) => {
+      // Se password foi enviada, confirmPassword é obrigatória
+      if (data.password && !data.confirmPassword) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["confirmPassword"],
+          message: "A confirmação de senha é obrigatória",
+        });
+      }
+
+      // Se ambas existem, elas devem ser iguais
+      if (
+        data.password &&
+        data.confirmPassword &&
+        data.password !== data.confirmPassword
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["confirmPassword"],
+          message: "As senhas não coincidem",
+        });
+      }
+    }),
 });
 
 export const authUserSchema = z.object({
