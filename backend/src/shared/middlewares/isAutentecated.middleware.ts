@@ -6,7 +6,7 @@ interface IPayload {
   sub: string;
 }
 
-function isAuthenticated(req: Request, res: Response, next: NextFunction) {
+function isAuthenticated(req: Request, _res: Response, next: NextFunction) {
   const authToken = req.headers.authorization;
 
   if (!authToken) {

@@ -41,8 +41,11 @@
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.0.2",
     "pg": "^8.22.0",
+    "prisma": "^7.8.0",
+    "tsc-alias": "^1.8.17",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.21.0",
+    "typescript": "^6.0.3",
     "zod": "^4.3.6"
   }
 }
