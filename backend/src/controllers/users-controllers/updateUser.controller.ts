@@ -4,12 +4,13 @@ import { NextFunction, Request, Response } from "express";
 class UpdateUserController {
   async handle(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = req.params.id as string;
+      const user_id = req.user_id as string;
+
       const { name, email, password } = req.body;
 
       const updateUserService = new UpdateUserService();
       const result = await updateUserService.execute({
-        id,
+        user_id,
         name,
         email,
         password,

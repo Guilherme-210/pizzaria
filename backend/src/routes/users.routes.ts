@@ -9,14 +9,19 @@ import {
   createUserSchema,
   updateUserSchema,
 } from "@/schemas/user.schemas";
+import { isAuthenticated } from "@/shared/middlewares/isAutentecated.middleware";
 import { validateSchema } from "@/shared/middlewares/valedate.schemas";
 import { Router } from "express";
 
 const userRouter = Router();
 
-userRouter.get("/users", new ListUsersController().handle);
+userRouter.get("/users", isAuthenticated, new ListUsersController().handle);
 
-userRouter.get("/users/:id", new GetUserController().handle);
+userRouter.get(
+  "/users/:user_id",
+  isAuthenticated,
+  new GetUserController().handle,
+);
 
 userRouter.post(
   "/users",
@@ -31,17 +36,23 @@ userRouter.post(
 );
 
 userRouter.put(
-  "/users/:id",
+  "/users/:user_id",
   validateSchema(updateUserSchema),
+  isAuthenticated,
   new UpdateUserController().handle,
 );
 
 userRouter.patch(
-  "/users/:id",
+  "/users/:user_id",
   validateSchema(updateUserSchema),
+  isAuthenticated,
   new UpdateUserController().handle,
 );
 
-userRouter.delete("/users/:id", new DeleteUserController().handle);
+userRouter.delete(
+  "/users/:user_id",
+  isAuthenticated,
+  new DeleteUserController().handle,
+);
 
 export { userRouter };

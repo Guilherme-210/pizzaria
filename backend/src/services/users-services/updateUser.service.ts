@@ -3,16 +3,16 @@ import { AppError } from "@/shared/errors/AppError";
 import { hash } from "bcryptjs";
 
 interface IUpdateUserService {
-  id: string;
+  user_id: string;
   name?: string;
   email?: string;
   password?: string;
 }
 
 class UpdateUserService {
-  async execute({ id, name, email, password }: IUpdateUserService) {
+  async execute({ user_id, name, email, password }: IUpdateUserService) {
     const user = await prisma.user.findUnique({
-      where: { id },
+      where: { id: user_id },
     });
 
     if (!user) {
@@ -36,7 +36,7 @@ class UpdateUserService {
     if (password) data.password = await hash(password, 10);
 
     const updatedUser = await prisma.user.update({
-      where: { id },
+      where: { id: user_id },
       data,
       select: {
         id: true,

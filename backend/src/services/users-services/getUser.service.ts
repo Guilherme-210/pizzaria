@@ -2,9 +2,9 @@ import prisma from "@/lib/prisma";
 import { AppError } from "@/shared/errors/AppError";
 
 class GetUserService {
-  async execute(id: string) {
+  async execute(user_id: string) {
     const user = await prisma.user.findUnique({
-      where: { id },
+      where: { id: user_id },
       select: {
         id: true,
         name: true,
