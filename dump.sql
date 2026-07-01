@@ -24,8 +24,12 @@ SET row_security = off;
 --
 
 CREATE TYPE public."Role" AS ENUM (
-    'STAFF',
-    'ADMIN'
+    'CUSTOMER',
+    'ATTENDANT',
+    'KITCHEN',
+    'MANAGER',
+    'ADMIN',
+    'SUPER_ADMIN'
 );
 
 
@@ -110,7 +114,7 @@ CREATE TABLE public.users (
     name text NOT NULL,
     email text NOT NULL,
     password text NOT NULL,
-    role public."Role" DEFAULT 'STAFF'::public."Role" NOT NULL,
+    role public."Role" DEFAULT 'CUSTOMER'::public."Role" NOT NULL,
     "createdAt" timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updatedAt" timestamp(3) without time zone NOT NULL
 );
@@ -184,7 +188,7 @@ COPY public.products (id, name, price, description, banner, disabled, category_i
 --
 
 COPY public.users (id, name, email, password, role, "createdAt", "updatedAt") FROM stdin;
-4	guilherme	guilherme.teste@email.com	$2b$10$APMMxRuBA0LegnlPcDMG.OTLAa02Gl0FeTwU/R2W/asnP2i/1yJdG	STAFF	2026-06-23 13:32:28.465	2026-06-23 13:32:28.465
+4	guilherme	guilherme.teste@email.com	$2b$10$APMMxRuBA0LegnlPcDMG.OTLAa02Gl0FeTwU/R2W/asnP2i/1yJdG	ATTENDANT	2026-06-23 13:32:28.465	2026-06-23 13:32:28.465
 \.
 
 
@@ -271,4 +275,3 @@ ALTER TABLE ONLY public.products
 --
 
 \unrestrict 2g5ABNoJRl00mbyyckhCrhce0eDiaUBsDBqZX0NFjBvDjnXGL7N1Kc0eJWoMbd6
-

@@ -2,6 +2,7 @@ import { AppError } from "@errors/AppError";
 import prisma from "@lib/prisma";
 import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
+import type { Role } from "@/generated/prisma/enums";
 
 class AuthUserService {
   async execute(
@@ -12,7 +13,7 @@ class AuthUserService {
     id: string;
     name: string;
     email: string;
-    role: string;
+    role: Role;
   }> {
     const user = await prisma.user.findUnique({
       where: {
