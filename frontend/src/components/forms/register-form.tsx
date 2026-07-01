@@ -12,13 +12,21 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { useActionState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useActionState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Form } from './form';
 
 export function RegisterForm() {
-    const [state, formAction, isPending] = useActionState(registerAction, null)
+  const router = useRouter()
+  const [state, formAction, isPending] = useActionState(registerAction, null)
+
+  useEffect(() => {
+    if (state?.success && state?.redirectTo) {
+      router.replace(state.redirectTo)
+    }
+  }, [state, router])
 
   return (
     <Card>
@@ -37,7 +45,7 @@ export function RegisterForm() {
               id="name"
               name="name"
               placeholder="Digite o seu nome"
-              // required
+              required
               minLength={3}
             />
           </div>
@@ -49,7 +57,7 @@ export function RegisterForm() {
               id="email"
               name="email"
               placeholder="Digite seu e-mail"
-              // required
+              required
             />
           </div>
 
@@ -60,7 +68,7 @@ export function RegisterForm() {
               id="password"
               name="password"
               placeholder="Digite sua senha"
-              // required
+              required
             />
           </div>
 
@@ -71,7 +79,7 @@ export function RegisterForm() {
               id="confirmPassword"
               name="confirmPassword"
               placeholder="Confirme sua senha"
-              // required
+              required
             />
           </div>
 

@@ -1,4 +1,5 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL as string || 'http://localhost:3334/api';
+const API_URL =
+  (process.env.NEXT_PUBLIC_API_URL as string) || 'http://localhost:3334/api';
 
 /**
  * Returns the base URL used for API requests.
@@ -6,18 +7,67 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL as string || 'http://localhost:3
  * @returns The application's API base URL.
  */
 export function getApiUrl() {
-    return API_URL;
+  return API_URL;
+}
+
+type ApiErrorResponse = {
+  message?: string;
+  error?: string;
+  details?:
+    | string
+    | Array<{
+        campo?: string;
+        mensagem?: string;
+      }>;
+  mensage?: string;
+};
+
+/**
+ * Extracts a readable error message from the API error response.
+ *
+ * @param error - Error response returned by the API.
+ * @param status - HTTP status code returned by the response.
+ * @returns A readable error message.
+ */
+function getApiErrorMessage(error: ApiErrorResponse, status: number) {
+  if (typeof error.message === 'string') {
+    return error.message;
+  }
+
+  if (typeof error.error === 'string' && !error.details) {
+    return error.error;
+  }
+
+  if (typeof error.details === 'string') {
+    return error.details;
+  }
+
+  if (Array.isArray(error.details) && error.details.length > 0) {
+    const messages = error.details
+      .map((detail) => detail.mensagem)
+      .filter(Boolean)
+      .join(', ');
+
+    if (messages) {
+      return messages;
+    }
+  }
+
+  if (typeof error.error === 'string') {
+    return error.error;
+  }
+
+  return error.mensage || `Erro HTTP: ${status}`;
 }
 
 interface FetchOptions extends RequestInit {
-    token?: string;
-    cache?: RequestCache;
-    next?: {
-        revalidate?: false | 0 | number;
-        tags?: string[];
-    };
+  token?: string;
+  cache?: RequestCache;
+  next?: {
+    revalidate?: false | 0 | number;
+    tags?: string[];
+  };
 }
-
 /**
  * Sends an HTTP request to the application's API.
  *
@@ -38,36 +88,36 @@ interface FetchOptions extends RequestInit {
  * const users = await apiClient<User[]>('/users');
  */
 export async function apiClient<T>(
-    endpoint: string,
-    options: FetchOptions = {}
+  endpoint: string,
+  options: FetchOptions = {},
 ): Promise<T> {
-    const { token, ...fetchOptions } = options;
+  const { token, ...fetchOptions } = options;
 
-    const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        ...(fetchOptions.headers as Record<string, string>),
-    };
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(fetchOptions.headers as Record<string, string>),
+  };
 
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
 
-    if (fetchOptions.body instanceof FormData) {
-        headers['Content-Type'] = 'multipart/form-data';
-    }
+  if (fetchOptions.body instanceof FormData) {
+    headers['Content-Type'] = 'multipart/form-data';
+  }
 
-    const response = await fetch(`${API_URL}${endpoint}`, {
-        ...fetchOptions,
-        headers,
-    })
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    ...fetchOptions,
+    headers,
+  });
 
-    if (!response.ok) {
-        const error = await response.json().catch(() => ({
-            mensage: 'Error HTTP: ' + response.status
-        }));
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({
+      message: 'Erro HTTP: ' + response.status,
+    }));
 
-        throw new Error(error.mensage || `API request failed`);
-    }
+    throw new Error(getApiErrorMessage(error, response.status));
+  }
 
-    return response.json() as Promise<T>;
+  return response.json() as Promise<T>;
 }
