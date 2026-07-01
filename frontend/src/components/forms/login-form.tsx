@@ -1,3 +1,7 @@
+'use client'
+
+import Link from 'next/link';
+
 import {
   Card,
   CardContent,
@@ -7,12 +11,13 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Form } from './form';
 
 export function LoginForm() {
+  // const [state, formAction, isPending] = useActionState(registerAction, null)
+
   return (
     <Card>
       <CardHeader className="text-white text-center">
@@ -22,13 +27,14 @@ export function LoginForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Form>
+        <Form >
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
               type="email"
               id="email"
-              placeholder="Digite o seu email"
+              name="email"
+              placeholder="Digite seu e-mail"
               required
             />
           </div>
@@ -38,13 +44,14 @@ export function LoginForm() {
             <Input
               type="password"
               id="password"
-              placeholder="Digite a sua senha"
+              name="password"
+              placeholder="Digite sua senha"
               required
             />
           </div>
 
           <div>
-            <Button className="w-full">Acessar</Button>
+            <Button className="w-full" type='submit'>Acessar</Button>
           </div>
         </Form>
       </CardContent>
@@ -52,10 +59,10 @@ export function LoginForm() {
         <p className="mt-6 text-center text-sm text-white/60">
           Ainda não tem conta?{' '}
           <Link
-            href="/registe"
+            href="/register"
             className="font-semibold text-primary hover:text-pink-300"
           >
-            Faça cadastro
+            Cadastre-se
           </Link>
         </p>
       </CardFooter>

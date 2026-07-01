@@ -48,7 +48,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="card-description"
       className={cn(
-        'text-sm uppercase tracking-[0.25em] text-white/70',
+        'text-sm uppercase tracking-widest text-white/90',
         className,
       )}
       {...props}
@@ -96,5 +96,6 @@ export {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 };
+

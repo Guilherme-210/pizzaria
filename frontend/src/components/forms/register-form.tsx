@@ -1,18 +1,25 @@
+'use client'
+
+import Link from 'next/link';
+
+import { registerAction } from '@/actions/user/auth';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import Link from 'next/link';
+import { useActionState } from 'react';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Form } from './form';
 
 export function RegisterForm() {
+    const [state, formAction, isPending] = useActionState(registerAction, null)
+
   return (
     <Card>
       <CardHeader className="text-white text-center">
@@ -22,14 +29,15 @@ export function RegisterForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Form>
+        <Form action={formAction}>
           <div className="space-y-2">
             <Label htmlFor="name">Nome</Label>
             <Input
               type="text"
               id="name"
+              name="name"
               placeholder="Digite o seu nome"
-              required
+              // required
               minLength={3}
             />
           </div>
@@ -39,8 +47,9 @@ export function RegisterForm() {
             <Input
               type="email"
               id="email"
-              placeholder="Digite o seu email"
-              required
+              name="email"
+              placeholder="Digite seu e-mail"
+              // required
             />
           </div>
 
@@ -49,29 +58,35 @@ export function RegisterForm() {
             <Input
               type="password"
               id="password"
-              placeholder="Digite a sua senha"
-              required
+              name="password"
+              placeholder="Digite sua senha"
+              // required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="passwordConfirm">Confirme a sua senha</Label>
+            <Label htmlFor="confirmPassword">Confirme a sua senha</Label>
             <Input
               type="password"
-              id="passwordConfirm"
-              placeholder="Confirme a sua senha"
-              required
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Confirme sua senha"
+              // required
             />
           </div>
 
+          {state?.error && (
+            <p className="text-sm text-red-400">{state.error}</p>
+          )}
+
           <div>
-            <Button className="w-full">Criar</Button>
+            <Button className="w-full" type='submit'>{isPending ? "Cadastrando" : "Cadastre-se"}</Button>
           </div>
         </Form>
       </CardContent>
       <CardFooter>
         <p className="mt-6 text-center text-sm text-white/60">
-          já tenho uma conta?{' '}
+          Já tenho uma conta?{' '}
           <Link
             href="/login"
             className="font-semibold text-primary hover:text-pink-300"
