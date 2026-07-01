@@ -15,14 +15,6 @@ import { Router } from "express";
 
 const userRouter = Router();
 
-userRouter.get("/users", isAuthenticated, new ListUsersController().handle);
-
-userRouter.get(
-  "/users/:user_id",
-  isAuthenticated,
-  new GetUserController().handle,
-);
-
 userRouter.post(
   "/users",
   validateSchema(createUserSchema),
@@ -40,6 +32,14 @@ userRouter.put(
   validateSchema(updateUserSchema),
   isAuthenticated,
   new UpdateUserController().handle,
+);
+
+userRouter.get("/users", isAuthenticated, new ListUsersController().handle);
+
+userRouter.get(
+  "/users/:user_id",
+  isAuthenticated,
+  new GetUserController().handle,
 );
 
 userRouter.patch(
