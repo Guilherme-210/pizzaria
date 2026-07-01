@@ -2,9 +2,9 @@ import prisma from "@/lib/prisma";
 import { AppError } from "@/shared/errors/AppError";
 
 class DeleteUserService {
-  async execute(user_id: string) {
+  async execute(userId: string) {
     const user = await prisma.user.findUnique({
-      where: { id: user_id },
+      where: { id: userId },
     });
 
     if (!user) {
@@ -12,7 +12,7 @@ class DeleteUserService {
     }
 
     await prisma.user.delete({
-      where: { id: user_id },
+      where: { id: userId },
     });
 
     return { message: "Usuário removido com sucesso" };

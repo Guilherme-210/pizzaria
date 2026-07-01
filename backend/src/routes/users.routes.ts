@@ -15,44 +15,52 @@ import { Router } from "express";
 
 const userRouter = Router();
 
+const createUserController = new CreateUserController();
+const authUserController = new AuthUserController();
+const listUsersController = new ListUsersController();
+const getUserController = new GetUserController();
+const updateUserController = new UpdateUserController();
+const deleteUserController = new DeleteUserController();
+
 userRouter.post(
   "/users",
   validateSchema(createUserSchema),
-  new CreateUserController().handle,
+  createUserController.handle,
 );
 
 userRouter.post(
   "/users/session",
   validateSchema(authUserSchema),
-  new AuthUserController().handle,
+  authUserController.handle,
+);
+
+userRouter.get("/users", isAuthenticated, listUsersController.handle);
+
+userRouter.get(
+  "/users/:userId",
+  isAuthenticated,
+  getUserController.handle,
 );
 
 userRouter.put(
-  "/users/:user_id",
+  "/users/:userId",
+  isAuthenticated,
   validateSchema(updateUserSchema),
-  isAuthenticated,
-  new UpdateUserController().handle,
-);
-
-userRouter.get("/users", isAuthenticated, new ListUsersController().handle);
-
-userRouter.get(
-  "/users/:user_id",
-  isAuthenticated,
-  new GetUserController().handle,
+  updateUserController.handle,
 );
 
 userRouter.patch(
-  "/users/:user_id",
-  validateSchema(updateUserSchema),
+  "/users/:userId",
   isAuthenticated,
-  new UpdateUserController().handle,
+  validateSchema(updateUserSchema),
+  updateUserController.handle,
 );
 
 userRouter.delete(
-  "/users/:user_id",
+  "/users/:userId",
   isAuthenticated,
-  new DeleteUserController().handle,
+  deleteUserController.handle,
 );
 
 export { userRouter };
+

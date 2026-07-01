@@ -21,7 +21,7 @@ function isAuthenticated(req: Request, _res: Response, next: NextFunction) {
       process.env.JWT_SECRET as string,
     ) as IPayload;
 
-    req.user_id = sub;
+    req.userId = sub;
  } catch (error) {
     throw new AppError("Token de autenticação inválido", 401);
   }
