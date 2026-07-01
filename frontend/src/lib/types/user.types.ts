@@ -2,10 +2,9 @@ export const userRoles = ['user', 'admin'] as const;
 export type UserRole = (typeof userRoles)[number];
 
 export interface User {
-  id: number;
+  id: string;
   name: string;
   email: string;
-  password?: string;
   role: UserRole;
   createdAt: string;
   updatedAt: string;
@@ -16,11 +15,11 @@ export interface UserLoginPayload {
   password: string;
 }
 export interface UserLogin {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: UserRole;
-  token?: string;
+  token: string;
 }
 
 export interface UserRegisterPayload {

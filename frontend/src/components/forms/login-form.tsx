@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
 import Link from 'next/link';
 import { useActionState } from 'react';
 
-import { LoginAction } from '@/actions/user/auth';
+import { loginAction } from '@/actions/user/auth';
 
 import {
   Card,
@@ -19,12 +19,12 @@ import { Label } from '../ui/label';
 import { Form } from './form';
 
 export function LoginForm() {
-  const [state, formAction, isPending] = useActionState(LoginAction, null)
+  const [state, formAction, isPending] = useActionState(loginAction, null);
 
   return (
     <Card>
       <CardHeader className="text-white text-center">
-        <CardTitle>Sujeito Prizzaria</CardTitle>
+        <CardTitle>Sujeito Pizzaria</CardTitle>
         <CardDescription>
           Preencha os dados para entrar na sua conta
         </CardDescription>
@@ -50,15 +50,26 @@ export function LoginForm() {
               name="password"
               placeholder="Digite sua senha"
               required
+              minLength={6}
             />
           </div>
 
           {state?.error && (
-            <p className="text-sm text-red-400">{state.error}</p>
+            <p className="text-sm text-red-400" role="alert">
+              {state.error}
+            </p>
+          )}
+
+          {state?.success && (
+            <p className="text-sm text-emerald-300" role="status">
+              Login realizado com sucesso.
+            </p>
           )}
 
           <div>
-            <Button className="w-full" type='submit'>{isPending ? "Logando..." : "Acessar"}</Button>
+            <Button className="w-full" type="submit" disabled={isPending}>
+              {isPending ? 'Entrando...' : 'Acessar'}
+            </Button>
           </div>
         </Form>
       </CardContent>

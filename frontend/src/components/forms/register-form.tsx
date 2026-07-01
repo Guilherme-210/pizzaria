@@ -1,6 +1,8 @@
-'use client'
+'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useActionState, useEffect } from 'react';
 
 import { registerAction } from '@/actions/user/auth';
 import {
@@ -12,26 +14,24 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { useRouter } from 'next/navigation';
-import { useActionState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Form } from './form';
 
 export function RegisterForm() {
-  const router = useRouter()
-  const [state, formAction, isPending] = useActionState(registerAction, null)
+  const router = useRouter();
+  const [state, formAction, isPending] = useActionState(registerAction, null);
 
   useEffect(() => {
     if (state?.success && state?.redirectTo) {
-      router.replace(state.redirectTo)
+      router.replace(state.redirectTo);
     }
-  }, [state, router])
+  }, [state, router]);
 
   return (
     <Card>
       <CardHeader className="text-white text-center">
-        <CardTitle>Sujeito Prizzaria</CardTitle>
+        <CardTitle>Sujeito Pizzaria</CardTitle>
         <CardDescription>
           Preencha os dados para criar sua conta
         </CardDescription>
@@ -69,6 +69,7 @@ export function RegisterForm() {
               name="password"
               placeholder="Digite sua senha"
               required
+              minLength={6}
             />
           </div>
 
@@ -80,15 +81,20 @@ export function RegisterForm() {
               name="confirmPassword"
               placeholder="Confirme sua senha"
               required
+              minLength={6}
             />
           </div>
 
           {state?.error && (
-            <p className="text-sm text-red-400">{state.error}</p>
+            <p className="text-sm text-red-400" role="alert">
+              {state.error}
+            </p>
           )}
 
           <div>
-            <Button className="w-full" type='submit'>{isPending ? "Cadastrando..." : "Cadastre-se"}</Button>
+            <Button className="w-full" type="submit" disabled={isPending}>
+              {isPending ? 'Cadastrando...' : 'Cadastre-se'}
+            </Button>
           </div>
         </Form>
       </CardContent>

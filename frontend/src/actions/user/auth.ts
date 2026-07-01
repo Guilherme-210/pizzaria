@@ -2,12 +2,12 @@
 
 import { apiClient } from '@/lib/api';
 import {
-  User,
   UserLogin,
   UserLoginPayload,
   UserRegister,
   UserRegisterPayload,
 } from '@/lib/types/user.types';
+import { cookies } from 'next/headers';
 
 type RegisterState = {
   success: boolean;
@@ -16,14 +16,29 @@ type RegisterState = {
 };
 
 export async function registerAction(
-  prevState: RegisterState | null,
+  _prevState: RegisterState | null,
   formData: FormData,
 ): Promise<RegisterState> {
   try {
-    const name = formData.get('name') as string;
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-    const confirmPassword = formData.get('confirmPassword') as string;
+    const name = String(formData.get('name') || '').trim();
+    const email = String(formData.get('email') || '').trim();
+    const password = String(formData.get('password') || '');
+    const confirmPassword = String(formData.get('confirmPassword') || '');
+
+    if (!name || !email || !password || !confirmPassword) {
+      return { success: false, error: 'Preencha todos os campos.' };
+    }
+
+    if (password.length < 6) {
+      return {
+        success: false,
+        error: 'A senha deve ter no mínimo 6 caracteres.',
+      };
+    }
+
+    if (password !== confirmPassword) {
+      return { success: false, error: 'As senhas não coincidem.' };
+    }
 
     const data: UserRegisterPayload = {
       name,
@@ -56,24 +71,37 @@ type LoginState = {
   redirectTo?: string;
 };
 
-export async function LoginAction(
-  prevState: LoginState | null,
+export async function loginAction(
+  _prevState: LoginState | null,
   formData: FormData,
 ): Promise<LoginState> {
   try {
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+    const email = String(formData.get('email') || '').trim();
+    const password = String(formData.get('password') || '');
+
+    if (!email || !password) {
+      return { success: false, error: 'Preencha e-mail e senha.' };
+    }
 
     const data: UserLoginPayload = {
       email,
       password,
     };
 
-    await apiClient<UserLogin>('/users/session', {
+    const user = await apiClient<UserLogin>('/users/session', {
       method: 'POST',
       body: JSON.stringify(data),
     });
 
+    const cookieStore = await cookies();
+
+    cookieStore.set('auth-token', user.token, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24,
+      path: '/',
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    });
 
     return { success: true, error: null };
   } catch (error) {

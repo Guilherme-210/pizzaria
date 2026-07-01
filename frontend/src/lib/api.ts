@@ -60,6 +60,20 @@ function getApiErrorMessage(error: ApiErrorResponse, status: number) {
   return error.mensage || `Erro HTTP: ${status}`;
 }
 
+async function parseJsonResponse<T>(response: Response): Promise<T> {
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
+  const text = await response.text();
+
+  if (!text) {
+    return undefined as T;
+  }
+
+  return JSON.parse(text) as T;
+}
+
 interface FetchOptions extends RequestInit {
   token?: string;
   cache?: RequestCache;
@@ -92,18 +106,18 @@ export async function apiClient<T>(
   options: FetchOptions = {},
 ): Promise<T> {
   const { token, ...fetchOptions } = options;
+  const isFormData = fetchOptions.body instanceof FormData;
 
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...(fetchOptions.headers as Record<string, string>),
-  };
+  const headers = new Headers(fetchOptions.headers);
 
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+  if (isFormData) {
+    headers.delete('Content-Type');
+  } else if (!headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
   }
 
-  if (fetchOptions.body instanceof FormData) {
-    headers['Content-Type'] = 'multipart/form-data';
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`);
   }
 
   const response = await fetch(`${API_URL}${endpoint}`, {
@@ -112,12 +126,12 @@ export async function apiClient<T>(
   });
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({
+    const error = await parseJsonResponse<ApiErrorResponse>(response).catch(() => ({
       message: 'Erro HTTP: ' + response.status,
     }));
 
     throw new Error(getApiErrorMessage(error, response.status));
   }
 
-  return response.json() as Promise<T>;
+  return parseJsonResponse<T>(response);
 }
