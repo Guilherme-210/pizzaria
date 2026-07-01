@@ -1,0 +1,33 @@
+{
+  "editor.formatOnSave": true,
+  "files.autoSave": "afterDelay",
+  "editor.wordWrap": "off",
+  "editor.formatOnPaste": true,
+  "editor.mouseWheelZoom": false,
+  "editor.dropIntoEditor.showDropSelector": "afterDrop",
+  "explorer.compactFolders": false,
+  "scm.compactFolders": false,
+  "git-graph.commitDetailsView.fileView.fileTree.compactFolders": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "emmet.includeLanguages": {
+    "typescript": "html",
+    "typescriptreact": "html"
+  },
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "typescript.preferences.importModuleSpecifierPreference": "non-relative",
+  "javascript.preferences.importModuleSpecifierPreference": "non-relative",
+}
