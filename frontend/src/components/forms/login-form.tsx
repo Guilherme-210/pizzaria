@@ -1,6 +1,9 @@
 'use client'
 
 import Link from 'next/link';
+import { useActionState } from 'react';
+
+import { LoginAction } from '@/actions/user/auth';
 
 import {
   Card,
@@ -16,7 +19,7 @@ import { Label } from '../ui/label';
 import { Form } from './form';
 
 export function LoginForm() {
-  // const [state, formAction, isPending] = useActionState(registerAction, null)
+  const [state, formAction, isPending] = useActionState(LoginAction, null)
 
   return (
     <Card>
@@ -27,7 +30,7 @@ export function LoginForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Form >
+        <Form action={formAction}>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -50,8 +53,12 @@ export function LoginForm() {
             />
           </div>
 
+          {state?.error && (
+            <p className="text-sm text-red-400">{state.error}</p>
+          )}
+
           <div>
-            <Button className="w-full" type='submit'>Acessar</Button>
+            <Button className="w-full" type='submit'>{isPending ? "Logando..." : "Acessar"}</Button>
           </div>
         </Form>
       </CardContent>

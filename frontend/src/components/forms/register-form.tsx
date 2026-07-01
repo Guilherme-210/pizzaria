@@ -80,7 +80,7 @@ export function RegisterForm() {
           )}
 
           <div>
-            <Button className="w-full" type='submit'>{isPending ? "Cadastrando" : "Cadastre-se"}</Button>
+            <Button className="w-full" type='submit'>{isPending ? "Cadastrando..." : "Cadastre-se"}</Button>
           </div>
         </Form>
       </CardContent>
