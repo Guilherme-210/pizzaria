@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from "express";
 class DeleteUserController {
   async handle(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = req.params.userId as string;
+      const userId = req.userId as string;
       const deleteUserService = new DeleteUserService();
       const result = await deleteUserService.execute(userId);
 

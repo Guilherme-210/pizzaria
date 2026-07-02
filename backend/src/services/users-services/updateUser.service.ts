@@ -39,7 +39,6 @@ class UpdateUserService {
       where: { id: userId },
       data,
       select: {
-        id: true,
         name: true,
         email: true,
         role: true,
@@ -53,4 +52,3 @@ class UpdateUserService {
 }
 
 export { UpdateUserService };
-

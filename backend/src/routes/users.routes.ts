@@ -29,38 +29,29 @@ userRouter.post(
 );
 
 userRouter.post(
-  "/users/session",
+  "/user/session",
   validateSchema(authUserSchema),
   authUserController.handle,
 );
 
 userRouter.get("/users", isAuthenticated, listUsersController.handle);
 
-userRouter.get(
-  "/users/:userId",
-  isAuthenticated,
-  getUserController.handle,
-);
+userRouter.get("/me", isAuthenticated, getUserController.handle);
 
 userRouter.put(
-  "/users/:userId",
+  "/user",
   isAuthenticated,
   validateSchema(updateUserSchema),
   updateUserController.handle,
 );
 
 userRouter.patch(
-  "/users/:userId",
+  "/user",
   isAuthenticated,
   validateSchema(updateUserSchema),
   updateUserController.handle,
 );
 
-userRouter.delete(
-  "/users/:userId",
-  isAuthenticated,
-  deleteUserController.handle,
-);
+userRouter.delete("/user", isAuthenticated, deleteUserController.handle);
 
 export { userRouter };
-

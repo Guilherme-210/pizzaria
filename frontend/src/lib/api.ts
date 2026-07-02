@@ -105,7 +105,7 @@ export async function apiClient<T>(
   endpoint: string,
   options: FetchOptions = {},
 ): Promise<T> {
-  const { token, ...fetchOptions } = options;
+  const { token, method, ...fetchOptions } = options;
   const isFormData = fetchOptions.body instanceof FormData;
 
   const headers = new Headers(fetchOptions.headers);
@@ -122,8 +122,10 @@ export async function apiClient<T>(
 
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...fetchOptions,
+    method: method || 'GET',
     headers: {
       'content-type': 'application/json',
+      ...Object.fromEntries(headers.entries()),
     },
   });
 

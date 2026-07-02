@@ -10,7 +10,6 @@ class AuthUserService {
     password: string,
   ): Promise<{
     token: string;
-    id: string;
     name: string;
     email: string;
     role: Role;
@@ -46,7 +45,6 @@ class AuthUserService {
     );
 
     return {
-      id: user.id,
       name: user.name,
       email: user.email,
       role: user.role,

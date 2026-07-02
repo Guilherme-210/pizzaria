@@ -1,8 +1,9 @@
 'use server';
 
 import { apiClient } from '@/lib/api';
-import { setAccessToken } from '@/lib/cookies/authCookies';
+import { getAccessToken, setAccessToken } from '@/lib/cookies/authCookies';
 import {
+  User,
   UserLogin,
   UserLoginPayload,
   UserRegister,
@@ -67,7 +68,7 @@ export async function registerAction(
       confirmPassword,
     };
 
-    await apiClient<UserRegister>('/users', {
+    await apiClient<UserRegister>('/user', {
       body: JSON.stringify(data),
       method: 'POST',
     });
@@ -124,7 +125,7 @@ export async function loginAction(
       password,
     };
 
-    const user = await apiClient<UserLogin>('/users/session', {
+    const user = await apiClient<UserLogin>('/user/session', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -148,5 +149,32 @@ export async function loginAction(
         fields,
       };
     }
+  }
+}
+
+export async function getUser(): Promise<User | null> {
+  try {
+    const token = await getAccessToken();
+
+    console.log('===========================');
+    console.log('Token:', token);
+    console.log('===========================');
+
+    if (!token) {
+      return null;
+    }
+
+    const user = await apiClient<User>('/me', {
+      token: token,
+    });
+
+    console.log('===========================');
+    console.log('User:', user);
+    console.log('===========================');
+
+    return user;
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    return null;
   }
 }

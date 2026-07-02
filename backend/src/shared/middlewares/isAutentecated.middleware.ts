@@ -22,7 +22,7 @@ function isAuthenticated(req: Request, _res: Response, next: NextFunction) {
     ) as IPayload;
 
     req.userId = sub;
- } catch (error) {
+  } catch (error) {
     throw new AppError("Token de autenticação inválido", 401);
   }
 
