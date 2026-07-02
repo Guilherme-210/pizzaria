@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Form } from './form';
+import { BoxAlert } from '../ui/alert';
 
 export function RegisterForm() {
   const router = useRouter();
@@ -29,86 +30,100 @@ export function RegisterForm() {
   }, [state, router]);
 
   return (
-    <Card>
-      <CardHeader className="text-white text-center">
-        <CardTitle>Sujeito Pizzaria</CardTitle>
-        <CardDescription>
-          Preencha os dados para criar sua conta
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form action={formAction}>
-          <div className="space-y-2">
-            <Label htmlFor="name">Nome</Label>
-            <Input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Digite o seu nome"
-              required
-              minLength={3}
-            />
-          </div>
+    <div >
+      {state?.error && (
+        <BoxAlert title={"Error"} description={state.error} type="error" />
+      )}
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Digite seu e-mail"
-              required
-            />
-          </div>
+      {state?.success && (
+        <BoxAlert title={"Sucesso"} description={"Cadastro realizado com sucesso."} type="success" />
+      )}
 
-          <div className="space-y-2">
-            <Label htmlFor="password">Senha</Label>
-            <Input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Digite sua senha"
-              required
-              minLength={6}
-            />
-          </div>
+      <div>
+        <Card className="bg-app-background text-white items-center relative w-full">
+          <CardHeader className="text-white text-center">
+            <CardTitle>Sujeito Pizzaria</CardTitle>
+            <CardDescription>
+              Preencha os dados para criar sua conta
+            </CardDescription>
+          </CardHeader>
 
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirme a sua senha</Label>
-            <Input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              placeholder="Confirme sua senha"
-              required
-              minLength={6}
-            />
-          </div>
+          <CardContent>
+            <Form action={formAction}>
+              <div className="space-y-2">
+                <Label htmlFor="name">Nome</Label>
+                <Input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Digite o seu nome"
+                  required
+                  minLength={3}
+                  defaultValue={state?.fields?.name || ''}
+                />
+              </div>
 
-          {state?.error && (
-            <p className="text-sm text-red-400" role="alert">
-              {state.error}
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Digite seu e-mail"
+                  required
+                  defaultValue={state?.fields?.email || ''}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Senha</Label>
+                <Input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Digite sua senha"
+                  required
+                  defaultValue={state?.fields?.password || ''}
+                  minLength={6}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirme a sua senha</Label>
+                <Input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  placeholder="Confirme sua senha"
+                  required
+                  defaultValue={state?.fields?.confirmPassword || ''}
+                  minLength={6}
+                />
+              </div>
+
+
+
+              <div>
+                <Button className="w-full" type="submit" disabled={isPending}>
+                  {isPending ? 'Cadastrando...' : 'Cadastre-se'}
+                </Button>
+              </div>
+            </Form>
+          </CardContent>
+
+          <CardFooter>
+            <p className="mt-6 text-center text-sm text-white/60">
+              Já tenho uma conta?{' '}
+              <Link
+                href="/login"
+                className="font-semibold text-primary hover:text-pink-300"
+              >
+                Faça login
+              </Link>
             </p>
-          )}
-
-          <div>
-            <Button className="w-full" type="submit" disabled={isPending}>
-              {isPending ? 'Cadastrando...' : 'Cadastre-se'}
-            </Button>
-          </div>
-        </Form>
-      </CardContent>
-      <CardFooter>
-        <p className="mt-6 text-center text-sm text-white/60">
-          Já tenho uma conta?{' '}
-          <Link
-            href="/login"
-            className="font-semibold text-primary hover:text-pink-300"
-          >
-            Faça login
-          </Link>
-        </p>
-      </CardFooter>
-    </Card>
+          </CardFooter>
+        </Card>
+      </div>
+    </div>
   );
 }

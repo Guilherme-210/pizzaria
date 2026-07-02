@@ -122,13 +122,17 @@ export async function apiClient<T>(
 
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...fetchOptions,
-    headers,
+    headers: {
+      'content-type': 'application/json',
+    },
   });
 
   if (!response.ok) {
-    const error = await parseJsonResponse<ApiErrorResponse>(response).catch(() => ({
-      message: 'Erro HTTP: ' + response.status,
-    }));
+    const error = await parseJsonResponse<ApiErrorResponse>(response).catch(
+      () => ({
+        message: 'Erro HTTP: ' + response.status,
+      }),
+    );
 
     throw new Error(getApiErrorMessage(error, response.status));
   }

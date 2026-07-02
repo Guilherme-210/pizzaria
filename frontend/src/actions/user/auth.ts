@@ -1,43 +1,63 @@
 'use server';
 
 import { apiClient } from '@/lib/api';
+import { setAccessToken } from '@/lib/cookies/authCookies';
 import {
   UserLogin,
   UserLoginPayload,
   UserRegister,
   UserRegisterPayload,
 } from '@/lib/types/user.types';
-import { cookies } from 'next/headers';
 
 type RegisterState = {
   success: boolean;
   error: string | null;
   redirectTo?: string;
+  fields?: {
+    name?: string;
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+  };
 };
 
 export async function registerAction(
   _prevState: RegisterState | null,
   formData: FormData,
 ): Promise<RegisterState> {
+  let name = '';
+  let email = '';
+  let password = '';
+  let confirmPassword = '';
+
   try {
-    const name = String(formData.get('name') || '').trim();
-    const email = String(formData.get('email') || '').trim();
-    const password = String(formData.get('password') || '');
-    const confirmPassword = String(formData.get('confirmPassword') || '');
+    name = String(formData.get('name') || '').trim();
+    email = String(formData.get('email') || '').trim();
+    password = String(formData.get('password') || '');
+    confirmPassword = String(formData.get('confirmPassword') || '');
 
     if (!name || !email || !password || !confirmPassword) {
-      return { success: false, error: 'Preencha todos os campos.' };
+      return {
+        success: false,
+        error: 'Preencha todos os campos.',
+        fields: { name, email, password, confirmPassword },
+      };
     }
 
     if (password.length < 6) {
       return {
         success: false,
         error: 'A senha deve ter no mínimo 6 caracteres.',
+        fields: { name, email, password, confirmPassword },
       };
     }
 
     if (password !== confirmPassword) {
-      return { success: false, error: 'As senhas não coincidem.' };
+      return {
+        success: false,
+        error: 'As senhas não coincidem.',
+        fields: { name, email, password, confirmPassword },
+      };
     }
 
     const data: UserRegisterPayload = {
@@ -55,11 +75,16 @@ export async function registerAction(
     return { success: true, error: null, redirectTo: '/login' };
   } catch (error) {
     if (error instanceof Error) {
-      return { success: false, error: error.message };
+      return {
+        success: false,
+        error: error.message,
+        fields: { name, email, password, confirmPassword },
+      };
     } else {
       return {
         success: false,
         error: 'Ocorreu um erro ao registrar o usuário.',
+        fields: { name, email, password, confirmPassword },
       };
     }
   }
@@ -69,18 +94,29 @@ type LoginState = {
   success: boolean;
   error: string | null;
   redirectTo?: string;
+  fields?: {
+    email?: string;
+    password?: string;
+  };
 };
 
 export async function loginAction(
   _prevState: LoginState | null,
   formData: FormData,
 ): Promise<LoginState> {
+  let email = '';
+  let password = '';
+
   try {
-    const email = String(formData.get('email') || '').trim();
-    const password = String(formData.get('password') || '');
+    email = String(formData.get('email') || '').trim();
+    password = String(formData.get('password') || '');
 
     if (!email || !password) {
-      return { success: false, error: 'Preencha e-mail e senha.' };
+      return {
+        success: false,
+        error: 'Preencha e-mail e senha.',
+        fields: { email, password },
+      };
     }
 
     const data: UserLoginPayload = {
@@ -93,22 +129,24 @@ export async function loginAction(
       body: JSON.stringify(data),
     });
 
-    const cookieStore = await cookies();
-
-    cookieStore.set('auth-token', user.token, {
-      httpOnly: true,
-      maxAge: 60 * 60 * 24,
-      path: '/',
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-    });
+    await setAccessToken(user.token);
 
     return { success: true, error: null };
   } catch (error) {
+    const fields = { email, password };
+
     if (error instanceof Error) {
-      return { success: false, error: error.message };
+      return {
+        success: false,
+        error: error.message || 'Ocorreu um erro ao fazer login.',
+        fields,
+      };
     } else {
-      return { success: false, error: 'Ocorreu um erro ao fazer login.' };
+      return {
+        success: false,
+        error: 'Ocorreu um erro ao fazer login.',
+        fields,
+      };
     }
   }
 }

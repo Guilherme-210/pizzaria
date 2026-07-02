@@ -1,6 +1,6 @@
 {
   "editor.formatOnSave": true,
-  "files.autoSave": "afterDelay",
+  "files.autoSave": "onFocusChange",
   "editor.wordWrap": "off",
   "editor.formatOnPaste": true,
   "editor.mouseWheelZoom": false,

@@ -1,5 +1,6 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { CheckCircle2Icon, CircleXIcon, AlertTriangleIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -73,4 +74,65 @@ function AlertAction({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-export { Alert, AlertTitle, AlertDescription, AlertAction }
+
+function AlertSuccess({ title, description }: { title?: string, description?: string }) {
+  return (
+    <div className="absolute top-5 w-full max-w-md">
+      <Alert className=" inset-x-0 top-0 w-full max-w-md border-emerald-200 ">
+        <CheckCircle2Icon />
+        <AlertTitle>{title || "Sucesso"}</AlertTitle>
+        <AlertDescription>
+          {description || "Operação realizada com sucesso."}
+        </AlertDescription>
+      </Alert>
+    </div>
+  )
+}
+
+function AlertInfo({ title, description }: { title?: string, description?: string }) {
+  return (
+    <div className="absolute top-5 w-full max-w-md">
+      <Alert className=" inset-x-0 top-0 w-full max-w-md border-amber-200 bg-amber-500 text-black ">
+        <AlertTriangleIcon />
+        <AlertTitle>{title || "Alerta"}</AlertTitle>
+        <AlertDescription className="text-black">
+          {description || "Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente."}
+        </AlertDescription>
+      </Alert>
+    </div>
+  )
+}
+
+function AlertError({ title, description }: { title?: string, description?: string }) {
+  return (
+    <div className="absolute top-5 w-full max-w-md">
+      <Alert className=" inset-x-0 top-0 w-full max-w-md" variant="destructive">
+        <CircleXIcon />
+        <AlertTitle>{title || "Error"}</AlertTitle>
+        <AlertDescription>
+          {description || "ocorreu um erro ao processar sua solicitação. Por favor, tente novamente."}
+        </AlertDescription>
+      </Alert>
+    </div>
+  )
+}
+
+function BoxAlert({ title, description, type }: { title?: string, description?: string, type: 'success' | 'info' | 'error' }) {
+  return (
+    <div className="z-50 absolute top-0 left-0 w-full flex items-center justify-center">
+      {type === 'success' && (
+        <AlertSuccess title={title} description={description} />
+      )}
+      {type === 'info' && (
+        <AlertInfo title={title} description={description} />
+      )}
+      {type === 'error' && (
+        <AlertError title={title} description={description} />
+      )}
+    </div>
+  )
+}
+
+export { Alert, AlertTitle, AlertDescription, AlertAction, AlertError, AlertInfo, AlertSuccess, BoxAlert }
+
+
