@@ -3,8 +3,6 @@
 import { cookies } from 'next/headers';
 import { COOKIE_NAME } from './constants';
 import { COOKIE_OPTIONS } from './options';
-import { User } from '../types/user.types';
-import { apiClient } from '../api';
 
 export async function getAccessToken(): Promise<string | undefined> {
   const cookieStore = await cookies();

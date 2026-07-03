@@ -68,7 +68,7 @@ export async function registerAction(
       confirmPassword,
     };
 
-    await apiClient<UserRegister>('/user', {
+    await apiClient<UserRegister>('/users', {
       body: JSON.stringify(data),
       method: 'POST',
     });
@@ -156,10 +156,6 @@ export async function getUser(): Promise<User | null> {
   try {
     const token = await getAccessToken();
 
-    console.log('===========================');
-    console.log('Token:', token);
-    console.log('===========================');
-
     if (!token) {
       return null;
     }
@@ -167,10 +163,6 @@ export async function getUser(): Promise<User | null> {
     const user = await apiClient<User>('/me', {
       token: token,
     });
-
-    console.log('===========================');
-    console.log('User:', user);
-    console.log('===========================');
 
     return user;
   } catch (error) {
