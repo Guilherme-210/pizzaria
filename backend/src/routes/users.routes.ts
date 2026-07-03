@@ -34,6 +34,12 @@ userRouter.post(
   authUserController.handle,
 );
 
+userRouter.post(
+  "/users/session",
+  validateSchema(authUserSchema),
+  authUserController.handle,
+);
+
 userRouter.get("/users", isAuthenticated, listUsersController.handle);
 
 userRouter.get("/me", isAuthenticated, getUserController.handle);
