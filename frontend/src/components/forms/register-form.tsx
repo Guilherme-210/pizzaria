@@ -29,14 +29,22 @@ export function RegisterForm() {
     }
   }, [state, router]);
 
+  if (state?.error === 'Usuário já existe') {
+    router.replace('/login');
+  }
+
   return (
-    <div >
+    <div>
       {state?.error && (
-        <BoxAlert title={"Error"} description={state.error} type="error" />
+        <BoxAlert title={'Error'} description={state.error} type="error" />
       )}
 
       {state?.success && (
-        <BoxAlert title={"Sucesso"} description={"Cadastro realizado com sucesso."} type="success" />
+        <BoxAlert
+          title={'Sucesso'}
+          description={'Cadastro realizado com sucesso.'}
+          type="success"
+        />
       )}
 
       <div>
@@ -100,8 +108,6 @@ export function RegisterForm() {
                   minLength={6}
                 />
               </div>
-
-
 
               <div>
                 <Button className="w-full" type="submit" disabled={isPending}>

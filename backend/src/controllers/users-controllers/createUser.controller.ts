@@ -5,17 +5,23 @@ interface ICreateUserController {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
 class CreateUserController {
   async handle(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, email, password } = req.body as ICreateUserController;
+      const { name, email, password, confirmPassword } =
+        req.body as ICreateUserController;
 
-      if (!name || !email || !password) {
+      if (!name || !email || !password || !confirmPassword) {
         return res
           .status(400)
           .json({ message: "Todos os campos são obrigatórios" });
+      }
+
+      if (password !== confirmPassword) {
+        return res.status(400).json({ message: "As senhas não coincidem" });
       }
 
       const createUserService = new CreateUserServices();
@@ -25,7 +31,7 @@ class CreateUserController {
         password: password,
       });
 
-      return res.status(201).json(result)
+      return res.status(201).json(result);
     } catch (error) {
       return next(error);
     }
