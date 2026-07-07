@@ -8,7 +8,9 @@ import {
   UserLoginPayload,
   UserRegister,
   UserRegisterPayload,
+  userRoles,
 } from '@/lib/types/user.types';
+import { redirect } from 'next/navigation';
 
 type RegisterState = {
   success: boolean;
@@ -169,4 +171,62 @@ export async function getUser(): Promise<User | null> {
     console.error('Error fetching user:', error);
     return null;
   }
+}
+
+export async function requireUser(
+  roles: (typeof userRoles)[number][],
+): Promise<User> {
+  const user = await getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  if (!roles.includes(user.role)) {
+    redirect('/access-denied');
+  }
+
+  return user;
+}
+
+export async function requireKitchenUser(): Promise<User> {
+  const user = await getUser();
+
+  const roles: (typeof userRoles)[number][] = [
+    'ATTENDANT',
+    'KITCHEN',
+    'MANAGER',
+    'ADMIN',
+    'SUPER_ADMIN',
+  ];
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  if (!roles.includes(user.role)) {
+    redirect('/access-denied');
+  }
+
+  return user;
+}
+
+export async function requireAdminUser(): Promise<User> {
+  const user = await getUser();
+
+  const roles: (typeof userRoles)[number][] = [
+    'MANAGER',
+    'ADMIN',
+    'SUPER_ADMIN',
+  ];
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  if (!roles.includes(user.role)) {
+    redirect('/access-denied');
+  }
+
+  return user;
 }
