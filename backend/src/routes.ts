@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import { userRouter } from "./routes/users.routes";
+import { categoryRouter } from "./routes/category.routes";
 
 const router = Router();
 
@@ -8,5 +9,6 @@ router.get("/api", (_req: Request, res: Response) => {
 });
 
 router.use("/api", userRouter);
+router.use("/api", categoryRouter);
 
 export { router };

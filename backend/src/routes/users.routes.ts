@@ -9,6 +9,7 @@ import {
   createUserSchema,
   updateUserSchema,
 } from "@/schemas/user.schemas";
+import { authorizeRoles } from "@/shared/middlewares/authorizeRoles.middleware";
 import { isAuthenticated } from "@/shared/middlewares/isAutentecated.middleware";
 import { validateSchema } from "@/shared/middlewares/valedate.schemas";
 import { Router } from "express";
@@ -40,7 +41,12 @@ userRouter.post(
   authUserController.handle,
 );
 
-userRouter.get("/users", isAuthenticated, listUsersController.handle);
+userRouter.get(
+  "/users",
+  isAuthenticated,
+  authorizeRoles("ADMIN", "SUPER_ADMIN"),
+  listUsersController.handle,
+);
 
 userRouter.get("/me", isAuthenticated, getUserController.handle);
 
@@ -58,6 +64,11 @@ userRouter.patch(
   updateUserController.handle,
 );
 
-userRouter.delete("/user", isAuthenticated, deleteUserController.handle);
+userRouter.delete(
+  "/user",
+  isAuthenticated,
+  authorizeRoles("ADMIN", "SUPER_ADMIN"),
+  deleteUserController.handle,
+);
 
 export { userRouter };
