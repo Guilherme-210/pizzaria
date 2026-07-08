@@ -1,12 +1,16 @@
 import { getUser } from '@/actions/user/auth';
 import { RegisterForm } from '@/components/forms/register-form';
+import { redirect } from 'next/navigation';
 
 export default async function RegisterPage() {
   const user = await getUser();
 
   if (user) {
-    // redirect('/dashboard');
-    console.log('User:', user);
+    if (user.role !== 'CUSTOMER') {
+      redirect('/cozinha');
+    } else {
+      redirect('/cardapio');
+    }
   }
 
   return (

@@ -20,7 +20,7 @@
     "dev:backend": "yarn workspace backend dev",
     "add:backend": "yarn workspace backend add",
     "install:backend": "yarn workspace backend install",
-    "dev:all": "yarn dev:backend && yarn dev:frontend",
+    "dev:all": "yarn workspace frontend dev && yarn workspace backend dev",
     "build:all": "yarn build:backend && yarn build:frontend",
     "install:all": "yarn install:frontend && yarn install:backend",
     "db:init": "yarn workspace backend prisma init",

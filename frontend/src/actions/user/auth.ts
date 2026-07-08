@@ -75,6 +75,18 @@ export async function registerAction(
       method: 'POST',
     });
 
+    const loginData: UserLoginPayload = {
+      email,
+      password,
+    };
+
+    const user = await apiClient<UserLogin>('/user/session', {
+      method: 'POST',
+      body: JSON.stringify(loginData),
+    });
+
+    await setAccessToken(user.token);
+
     return { success: true, error: null, redirectTo: '/login' };
   } catch (error) {
     if (error instanceof Error) {

@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { Form } from '@/components/forms/form';
+import { Button } from '@/components/ui/button';
 
 interface SidebarProps {
   userName: string;
@@ -32,6 +34,12 @@ export default function Sidebar({ userName, menuItems }: SidebarProps) {
           />
         ))}
       </nav>
+
+      <div className="border-t border-app-border p-4">
+        <Form>
+          <Button type="submit">Sair</Button>
+        </Form>
+      </div>
     </aside>
   );
 }

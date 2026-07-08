@@ -1,13 +1,17 @@
 import { getUser } from '@/actions/user/auth';
 import { LoginForm } from '@/components/forms/login-form';
+import { redirect } from 'next/navigation';
 // import { redirect } from 'next/navigation';
 
 export default async function LoginPage() {
   const user = await getUser();
 
   if (user) {
-    // redirect('/dashboard');
-    console.log('User:', user);
+    if (user.role !== 'CUSTOMER') {
+      redirect('/cozinha');
+    } else {
+      redirect('/cardapio');
+    }
   }
 
   return (
