@@ -1,7 +1,5 @@
-import { getUser } from '@/actions/user/auth';
-import Sidebar from '@/components/dashboard/sidebar';
-import { menuItemsByRole } from '@/lib/navigation/menu-items';
-import { redirect } from 'next/navigation';
+import { getUser } from '@/lib/auth';
+import LayoutContent from './LayoutContent';
 
 export default async function RootLayout({
   children,
@@ -10,21 +8,9 @@ export default async function RootLayout({
 }>) {
   const user = await getUser();
 
-  if (user) {
-    const pathname =
-      typeof window !== 'undefined' ? window.location.pathname : '';
-    console.log('Current pathname:', pathname);
-
-    if (pathname === '/login' || pathname === '/register') {
-      const menuItems = menuItemsByRole[user.role];
-      return (
-        <div>
-          <Sidebar userName={user.name} menuItems={menuItems} />
-          {children}
-        </div>
-      );
-    }
+  if (!user) {
+    return <>{children}</>;
   }
 
-  return <div>{children}</div>;
+  return <LayoutContent user={user}>{children}</LayoutContent>;
 }

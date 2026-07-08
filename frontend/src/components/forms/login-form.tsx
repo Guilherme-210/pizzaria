@@ -23,13 +23,17 @@ export function LoginForm() {
   const [state, formAction, isPending] = useActionState(loginAction, null);
 
   return (
-    <div >
+    <div>
       {state?.error && (
-        <BoxAlert title={"Error"} description={state.error} type="error" />
+        <BoxAlert title={'Error'} description={state.error} type="error" />
       )}
 
       {state?.success && (
-        <BoxAlert title={"Sucesso"} description={"Cadastro realizado com sucesso."} type="success" />
+        <BoxAlert
+          title={'Sucesso'}
+          description={'Cadastro realizado com sucesso.'}
+          type="success"
+        />
       )}
 
       <div>
@@ -93,7 +97,7 @@ export function LoginForm() {
             </p>
           </CardFooter>
         </Card>
-      </div >
-    </div >
+      </div>
+    </div>
   );
 }

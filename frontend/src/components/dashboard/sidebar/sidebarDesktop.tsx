@@ -5,13 +5,23 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Form } from '@/components/forms/form';
 import { Button } from '@/components/ui/button';
+import { LogOut } from 'lucide-react';
+import { logoutAction } from '@/actions/user/auth';
+import SidebarLinkItem from './sidebarLinkItem';
+import { menuItemsByRole } from '@/lib/navigation/menu-items';
+import { User } from '@/lib/types/user.types';
 
 interface SidebarProps {
-  userName: string;
-  menuItems: { href: string; label: string; icon: React.ReactNode }[];
+  user: User;
+  userName?: string;
+  menuItems?: { href: string; label: string; icon: React.ReactNode }[];
 }
 
-export default function Sidebar({ userName, menuItems }: SidebarProps) {
+export default function SidebarDesktop({
+  user,
+  userName = user?.name || '',
+  menuItems = user ? menuItemsByRole[user.role] : [],
+}: SidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -25,7 +35,7 @@ export default function Sidebar({ userName, menuItems }: SidebarProps) {
 
       <nav className="flex-1 flex-col p-4 space-y-4">
         {menuItems.map((item, index) => (
-          <SidebarItem
+          <SidebarLinkItem
             key={`${item.label}-${index}`}
             href={item.href}
             label={item.label}
@@ -36,36 +46,17 @@ export default function Sidebar({ userName, menuItems }: SidebarProps) {
       </nav>
 
       <div className="border-t border-app-border p-4">
-        <Form>
-          <Button type="submit">Sair</Button>
+        <Form action={logoutAction}>
+          <Button
+            type="submit"
+            variant="ghost"
+            className="w-full justify-start gap-2 text-white hover:text-white"
+          >
+            <LogOut className="h-5 w-5" />
+            Sair
+          </Button>
         </Form>
       </div>
     </aside>
-  );
-}
-
-function SidebarItem({
-  href,
-  label,
-  icon,
-  isActive,
-}: {
-  href: string;
-  label: string;
-  icon?: React.ReactNode;
-  isActive: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={cn(
-        'flex items-center gap-3 py-2 px-3 rounded-md transition-colors duration-300 text-sm font-medium',
-        isActive ? 'bg-red-700 text-white' : 'hover:bg-gray-700 text-gray-300',
-      )}
-      aria-label={`Navegue para ${label}`}
-    >
-      {icon && <span className="mr-2">{icon}</span>}
-      {label}
-    </Link>
   );
 }

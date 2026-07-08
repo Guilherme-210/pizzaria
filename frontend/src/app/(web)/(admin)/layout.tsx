@@ -1,4 +1,4 @@
-import { requireAdminUser } from '@/actions/user/auth';
+import { requireAdminUser } from '@/lib/auth';
 
 export default async function AdminLayout({
   children,

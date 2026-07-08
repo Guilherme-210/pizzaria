@@ -1,4 +1,4 @@
-import { requireKitchenUser } from '@/actions/user/auth';
+import { requireKitchenUser } from '@/lib/auth';
 
 export default async function CozinhaLayout({
   children,
