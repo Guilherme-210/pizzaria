@@ -8,6 +8,11 @@ class ListCategoriesService {
         name: true,
         createdAt: true,
         updatedAt: true,
+        _count: {
+          select: {
+            products: true,
+          },
+        },
       },
       orderBy: {
         name: "asc",
