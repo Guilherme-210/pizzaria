@@ -2,7 +2,6 @@
 
 import SidebarDesktop from '@/components/dashboard/sidebar/sidebarDesktop';
 import SidebarMobile from '@/components/dashboard/sidebar/sidebarMobile';
-import { menuItemsByRole } from '@/lib/navigation/menu-items';
 import { User } from '@/lib/types/user.types';
 import { usePathname } from 'next/navigation';
 

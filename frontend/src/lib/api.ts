@@ -136,7 +136,7 @@ export async function apiClient<T>(
       }),
     );
 
-    throw new Error(getApiErrorMessage(error, response.status));
+    console.error(getApiErrorMessage(error, response.status));
   }
 
   return parseJsonResponse<T>(response);
