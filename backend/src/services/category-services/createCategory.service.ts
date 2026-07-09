@@ -1,36 +1,32 @@
 import prisma from "@/lib/prisma";
 import { AppError } from "@/shared/errors/AppError";
 
-interface CreateCategoryProps {
-  name: string;
-}
-
 class CreateCategoryService {
   async execute(name: string) {
-    try {
-      //   const existingCategory = await prisma.category.findUnique({
-      //     where: {
-      //       name: categoryName,
-      //     },
-      //   });
-
-      //   if (existingCategory) {
-      //     throw new AppError("Categoria já existe", 400);
-      //   }
-
-      const category = await prisma.category.create({
-        data: { name: name },
-        select: {
-          id: true,
-          name: true,
-          createdAt: true,
+    const existingCategory = await prisma.category.findFirst({
+      where: {
+        name: {
+          equals: name,
+          mode: "insensitive",
         },
-      });
+      },
+    });
 
-      return category;
-    } catch (error) {
-      throw new AppError(`Erro ao criar categoria: ${error}`, 500);
+    if (existingCategory) {
+      throw new AppError("Categoria já existe", 409);
     }
+
+    const category = await prisma.category.create({
+      data: { name },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return category;
   }
 }
 
