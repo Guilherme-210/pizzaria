@@ -13,7 +13,7 @@ productRouter.get("/products", listProductsController.handle);
 
 productRouter.post(
   "/product",
-  validateSchema(createProductSchema),
+  // validateSchema(createProductSchema),
   createProductController.handle,
 );
 

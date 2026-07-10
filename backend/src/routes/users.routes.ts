@@ -25,19 +25,19 @@ const deleteUserController = new DeleteUserController();
 
 userRouter.post(
   "/users",
-  validateSchema(createUserSchema),
+  // validateSchema(createUserSchema),
   createUserController.handle,
 );
 
 userRouter.post(
   "/user/session",
-  validateSchema(authUserSchema),
+  // validateSchema(authUserSchema),
   authUserController.handle,
 );
 
 userRouter.post(
   "/users/session",
-  validateSchema(authUserSchema),
+  // validateSchema(authUserSchema),
   authUserController.handle,
 );
 
@@ -48,26 +48,30 @@ userRouter.get(
   listUsersController.handle,
 );
 
-userRouter.get("/me", isAuthenticated, getUserController.handle);
+userRouter.get(
+  "/me",
+  // isAuthenticated,
+  getUserController.handle,
+);
 
 userRouter.put(
   "/user",
-  isAuthenticated,
-  validateSchema(updateUserSchema),
+  // isAuthenticated,
+  // validateSchema(updateUserSchema),
   updateUserController.handle,
 );
 
 userRouter.patch(
   "/user",
-  isAuthenticated,
-  validateSchema(updateUserSchema),
+  // isAuthenticated,
+  // validateSchema(updateUserSchema),
   updateUserController.handle,
 );
 
 userRouter.delete(
   "/user",
-  isAuthenticated,
-  authorizeRoles("ADMIN", "SUPER_ADMIN"),
+  // isAuthenticated,
+  // authorizeRoles("ADMIN", "SUPER_ADMIN"),
   deleteUserController.handle,
 );
 

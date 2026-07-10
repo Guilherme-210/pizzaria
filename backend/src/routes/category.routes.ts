@@ -31,46 +31,46 @@ const categoryManagementRoles = authorizeRoles(
 
 categoryRouter.post(
   "/category",
-  isAuthenticated,
-  categoryManagementRoles,
-  validateSchema(createCategorySchema),
+  // isAuthenticated,
+  // categoryManagementRoles,
+  // validateSchema(createCategorySchema),
   createCategoryController.handle,
 );
 
 categoryRouter.get(
   "/categories",
-  isAuthenticated,
+  // isAuthenticated,
   listCategoriesController.handle,
 );
 
 categoryRouter.get(
   "/category/:id",
-  isAuthenticated,
-  validateSchema(categoryIdSchema),
+  // isAuthenticated,
+  // validateSchema(categoryIdSchema),
   getCategoryController.handle,
 );
 
 categoryRouter.put(
   "/category/:id",
-  isAuthenticated,
-  categoryManagementRoles,
-  validateSchema(updateCategorySchema),
+  // isAuthenticated,
+  // categoryManagementRoles,
+  // validateSchema(updateCategorySchema),
   updateCategoryController.handle,
 );
 
 categoryRouter.patch(
   "/category/:id",
-  isAuthenticated,
-  categoryManagementRoles,
-  validateSchema(updateCategorySchema),
+  // isAuthenticated,
+  // categoryManagementRoles,
+  // validateSchema(updateCategorySchema),
   updateCategoryController.handle,
 );
 
 categoryRouter.delete(
   "/category/:id",
-  isAuthenticated,
+  // isAuthenticated,
   authorizeRoles("ADMIN", "SUPER_ADMIN"),
-  validateSchema(categoryIdSchema),
+  // validateSchema(categoryIdSchema),
   deleteCategoryController.handle,
 );
 
