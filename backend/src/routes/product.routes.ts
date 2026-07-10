@@ -1,7 +1,7 @@
 import { CreateProductController } from "@/controllers/product-controllers/createProduct.controller";
 import { ListProductsController } from "@/controllers/product-controllers/listProducts.controller";
-import { createProductSchema } from "@/schemas/product.schemas";
-import { validateSchema } from "@/shared/middlewares/valedate.schemas";
+// import { createProductSchema } from "@/schemas/product.schemas";
+// import { validateSchema } from "@/shared/middlewares/valedate.schemas";
 import { Router } from "express";
 
 const productRouter = Router();

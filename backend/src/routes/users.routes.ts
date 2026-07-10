@@ -4,14 +4,14 @@ import { DeleteUserController } from "@/controllers/users-controllers/deleteUser
 import { GetUserController } from "@/controllers/users-controllers/getUser.controller";
 import { ListUsersController } from "@/controllers/users-controllers/listUsers.controller";
 import { UpdateUserController } from "@/controllers/users-controllers/updateUser.controller";
-import {
-  authUserSchema,
-  createUserSchema,
-  updateUserSchema,
-} from "@/schemas/user.schemas";
-import { authorizeRoles } from "@/shared/middlewares/authorizeRoles.middleware";
-import { isAuthenticated } from "@/shared/middlewares/isAutentecated.middleware";
-import { validateSchema } from "@/shared/middlewares/valedate.schemas";
+// import {
+//   authUserSchema,
+//   createUserSchema,
+//   updateUserSchema,
+// } from "@/schemas/user.schemas";
+// import { authorizeRoles } from "@/shared/middlewares/authorizeRoles.middleware";
+// import { isAuthenticated } from "@/shared/middlewares/isAutentecated.middleware";
+// import { validateSchema } from "@/shared/middlewares/valedate.schemas";
 import { Router } from "express";
 
 const userRouter = Router();
