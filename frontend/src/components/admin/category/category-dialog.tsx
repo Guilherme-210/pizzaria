@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useRouter } from 'next/navigation';
 
 type CategoryFormValues = {
   name: string;
@@ -36,6 +37,7 @@ export default function CategoryDialog({
   editingId: string;
   categoryName: string;
 }) {
+  const router = useRouter();
   const [submitError, setSubmitError] = useState('');
 
   const {
@@ -78,6 +80,7 @@ export default function CategoryDialog({
     }
 
     setOpen(false);
+    router.refresh();
   }
 
   return (

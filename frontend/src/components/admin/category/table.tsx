@@ -26,10 +26,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Categoria } from '@/lib/types/category.types';
 import { PencilIcon, PlusIcon, TrashIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function CategoriasTable({
@@ -37,42 +37,40 @@ export default function CategoriasTable({
   setIsCreating,
   setIsEditing,
   setEditingId,
-  confirmDelete,
-  setConfirmDelete,
 }: {
   categorias: Categoria[];
   setIsCreating: React.Dispatch<React.SetStateAction<boolean>>;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   setEditingId: React.Dispatch<React.SetStateAction<string>>;
-  confirmDelete: boolean;
-  setConfirmDelete: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const router = useRouter();
   const [isOpen, setOpen] = useState<boolean>(false);
-  const [categoryId, setcategoryId] = useState<string>('');
+  const [categoryId, setCategoryId] = useState<string>('');
+  const [deleteError, setDeleteError] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleDeleteCategoria() {
-    let result = { success: false, message: 'Execução cancelada' };
-    try {
-      if (!confirmDelete) {
-        result = await deleteCategoriaAction(categoryId);
-
-        return { success: result.success, message: result.message };
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        return { success: false, message: error.message };
-      }
-
-      return {
-        success: false,
-        message: 'Erro ao deletar a categoria.',
-      };
-    } finally {
-      setOpen(false);
-      setConfirmDelete(false);
-      setcategoryId('');
-      setEditingId('');
+    if (!categoryId) {
+      setDeleteError('Categoria inválida.');
+      return;
     }
+
+    setDeleteError('');
+    setIsDeleting(true);
+
+    const result = await deleteCategoriaAction(categoryId);
+
+    setIsDeleting(false);
+
+    if (!result.success) {
+      setDeleteError(result.message);
+      return;
+    }
+
+    setOpen(false);
+    setCategoryId('');
+    setEditingId('');
+    router.refresh();
   }
 
   return (
@@ -146,7 +144,8 @@ export default function CategoriasTable({
                         size="icon"
                         onClick={() => {
                           setOpen(true);
-                          setcategoryId(categoria.id.toString());
+                          setCategoryId(categoria.id);
+                          setDeleteError('');
                         }}
                       >
                         <TrashIcon className="h-3 w-4" />
@@ -172,10 +171,19 @@ export default function CategoriasTable({
                 esta categoria serão afetados.
               </DialogDescription>
             </DialogHeader>
+            {deleteError && (
+              <p className="text-sm text-red-500" role="alert">
+                {deleteError}
+              </p>
+            )}
             <DialogFooter>
               <DialogClose>Cancelar</DialogClose>
-              <Button variant="destructive" onClick={handleDeleteCategoria}>
-                Deletar
+              <Button
+                variant="destructive"
+                onClick={handleDeleteCategoria}
+                disabled={isDeleting}
+              >
+                {isDeleting ? 'Deletando...' : 'Deletar'}
               </Button>
             </DialogFooter>
           </DialogContent>

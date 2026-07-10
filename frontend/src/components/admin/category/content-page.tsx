@@ -13,7 +13,6 @@ export default function ContentCategoriasPage({
   const [isCreating, setIsCreating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState<string>('');
-  const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
   const categoryName =
     categorias.find((cat) => cat.id === editingId)?.name || '';
 
@@ -30,8 +29,6 @@ export default function ContentCategoriasPage({
           setIsCreating={setIsCreating}
           setIsEditing={setIsEditing}
           setEditingId={setEditingId}
-          confirmDelete={confirmDelete}
-          setConfirmDelete={setConfirmDelete}
         />
       </div>
 
@@ -43,8 +40,8 @@ export default function ContentCategoriasPage({
             if (!open) {
               setIsCreating(false);
               setIsEditing(false);
+              setEditingId('');
             }
-            setEditingId('');
           }}
           editingId={editingId}
         />
