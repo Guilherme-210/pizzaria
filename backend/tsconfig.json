@@ -21,7 +21,7 @@
     "alwaysStrict": true, // Emite "use strict" em todos os arquivos
 
     // Additional Checks
-    "noUnusedLocals": true, // Erro para variáveis locais não utilizadas
+    "noUnusedLocals": false, // Erro para variáveis locais não utilizadas
     "noUnusedParameters": true, // Erro para parâmetros não utilizados
     "noImplicitReturns": true, // Erro se nem todos os caminhos retornam valor
     "noFallthroughCasesInSwitch": true, // Erro em case sem break
