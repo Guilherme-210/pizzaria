@@ -43,8 +43,8 @@ userRouter.post(
 
 userRouter.get(
   "/users",
-  isAuthenticated,
-  authorizeRoles("ADMIN", "SUPER_ADMIN"),
+  // isAuthenticated,
+  // authorizeRoles("ADMIN", "SUPER_ADMIN"),
   listUsersController.handle,
 );
 
