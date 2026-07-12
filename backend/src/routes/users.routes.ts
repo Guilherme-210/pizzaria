@@ -4,14 +4,14 @@ import { DeleteUserController } from "@/controllers/users-controllers/deleteUser
 import { GetUserController } from "@/controllers/users-controllers/getUser.controller";
 import { ListUsersController } from "@/controllers/users-controllers/listUsers.controller";
 import { UpdateUserController } from "@/controllers/users-controllers/updateUser.controller";
-// import {
-//   authUserSchema,
-//   createUserSchema,
-//   updateUserSchema,
-// } from "@/schemas/user.schemas";
-// import { authorizeRoles } from "@/shared/middlewares/authorizeRoles.middleware";
+import {
+  authUserSchema,
+  createUserSchema,
+  updateUserSchema,
+} from "@/schemas/user.schemas";
+import { authorizeRoles } from "@/shared/middlewares/authorizeRoles.middleware";
 import { isAuthenticated } from "@/shared/middlewares/isAutentecated.middleware";
-// import { validateSchema } from "@/shared/middlewares/valedate.schemas";
+import { validateSchema } from "@/shared/middlewares/valedate.schemas";
 import { Router } from "express";
 
 const userRouter = Router();
@@ -25,53 +25,49 @@ const deleteUserController = new DeleteUserController();
 
 userRouter.post(
   "/users",
-  // validateSchema(createUserSchema),
+  validateSchema(createUserSchema),
   createUserController.handle,
 );
 
 userRouter.post(
   "/user/session",
-  // validateSchema(authUserSchema),
+  validateSchema(authUserSchema),
   authUserController.handle,
 );
 
 userRouter.post(
   "/users/session",
-  // validateSchema(authUserSchema),
+  validateSchema(authUserSchema),
   authUserController.handle,
 );
 
 userRouter.get(
   "/users",
-  // isAuthenticated,
-  // authorizeRoles("ADMIN", "SUPER_ADMIN"),
+  isAuthenticated,
+  authorizeRoles("ADMIN", "SUPER_ADMIN"),
   listUsersController.handle,
 );
 
-userRouter.get(
-  "/me",
-  isAuthenticated,
-  getUserController.handle,
-);
+userRouter.get("/me", isAuthenticated, getUserController.handle);
 
 userRouter.put(
   "/user",
-  // isAuthenticated,
-  // validateSchema(updateUserSchema),
+  isAuthenticated,
+  validateSchema(updateUserSchema),
   updateUserController.handle,
 );
 
 userRouter.patch(
   "/user",
-  // isAuthenticated,
-  // validateSchema(updateUserSchema),
+  isAuthenticated,
+  validateSchema(updateUserSchema),
   updateUserController.handle,
 );
 
 userRouter.delete(
   "/user",
-  // isAuthenticated,
-  // authorizeRoles("ADMIN", "SUPER_ADMIN"),
+  isAuthenticated,
+  authorizeRoles("ADMIN", "SUPER_ADMIN"),
   deleteUserController.handle,
 );
 
