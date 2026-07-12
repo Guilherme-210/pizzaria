@@ -7,7 +7,7 @@ export default {
     fileSize: 5 * 1024 * 1024, // 5MB
   },
   fileFilter: (
-    req: any,
+    _req: any,
     file: Express.Multer.File,
     cb: multer.FileFilterCallback,
   ) => {

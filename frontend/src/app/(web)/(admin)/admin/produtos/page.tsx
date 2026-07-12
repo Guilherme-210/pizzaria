@@ -1,8 +1,17 @@
+import ContentProdutosPage from '@/components/admin/product/content-page';
+import { apiClient } from '@/lib/api';
+import { getAccessToken } from '@/lib/cookies/authCookies';
+import { Produto } from '@/lib/types/product.types';
+import { Categoria } from '@/lib/types/category.types';
+
 export default async function ProdutosPage() {
+  const token = await getAccessToken();
+  const [produtos, categorias] = await Promise.all([
+    apiClient<Produto[]>('/products', { token }),
+    apiClient<Categoria[]>('/categories', { token }),
+  ]);
+
   return (
-    <main className="bg-app-background text-white min-h-screen flex flex-col items-center justify-center px-4 py-10">
-      <h1 className="text-4xl font-bold mb-4">Produtos</h1>
-      <p className="text-lg">Aqui você poderá gerenciar os produtos.</p>
-    </main>
+    <ContentProdutosPage produtos={produtos} categorias={categorias} />
   );
 }

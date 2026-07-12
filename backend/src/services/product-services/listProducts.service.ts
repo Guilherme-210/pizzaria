@@ -3,10 +3,6 @@ import prisma from "@/lib/prisma";
 class ListProductsService {
   async execute() {
     return prisma.product.findMany({
-      where: {
-        disabled: false,
-        category: { active: true },
-      },
       select: {
         id: true,
         name: true,
