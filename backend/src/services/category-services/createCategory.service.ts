@@ -21,6 +21,7 @@ class CreateCategoryService {
       select: {
         id: true,
         name: true,
+        active: true,
         createdAt: true,
         updatedAt: true,
       },

@@ -6,7 +6,7 @@ class UpdateUserController {
     try {
       const userId = req.userId as string;
 
-      const { name, email, password } = req.body;
+      const { name, email, password, active, image } = req.body;
 
       const updateUserService = new UpdateUserService();
       const result = await updateUserService.execute({
@@ -14,6 +14,8 @@ class UpdateUserController {
         name,
         email,
         password,
+        active,
+        image,
       });
 
       return res.status(200).json(result);

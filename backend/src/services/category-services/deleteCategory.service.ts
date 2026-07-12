@@ -11,11 +11,12 @@ class DeleteCategoryService {
       throw new AppError("Categoria não encontrada", 404);
     }
 
-    await prisma.category.delete({
+    await prisma.category.update({
       where: { id },
+      data: { active: false },
     });
 
-    return { message: "Categoria removida com sucesso" };
+    return { message: "Categoria desativada com sucesso" };
   }
 }
 

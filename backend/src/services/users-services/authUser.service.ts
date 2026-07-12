@@ -25,6 +25,10 @@ class AuthUserService {
       throw new AppError("Usuário não encontrado", 404);
     }
 
+    if (!user.active) {
+      throw new AppError("Usuário desativado", 403);
+    }
+
     // Verifica se a senha fornecida corresponde à senha armazenada no banco de dados
     const passwordMatch = await compare(password, user.password);
     if (!passwordMatch) {

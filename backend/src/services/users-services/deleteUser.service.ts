@@ -11,11 +11,12 @@ class DeleteUserService {
       throw new AppError("Usuário não encontrado", 404);
     }
 
-    await prisma.user.delete({
+    await prisma.user.update({
       where: { id: userId },
+      data: { active: false },
     });
 
-    return { message: "Usuário removido com sucesso" };
+    return { message: "Usuário desativado com sucesso" };
   }
 }
 

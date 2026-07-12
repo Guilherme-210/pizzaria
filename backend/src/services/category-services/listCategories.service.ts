@@ -6,6 +6,7 @@ class ListCategoriesService {
       select: {
         id: true,
         name: true,
+        active: true,
         createdAt: true,
         updatedAt: true,
         _count: {

@@ -29,9 +29,12 @@ class CreateUserServices {
         password: passwordHash,
       },
       select: {
+        id: true,
         name: true,
         email: true,
         role: true,
+        active: true,
+        image: true,
         createdAt: true,
       },
     });

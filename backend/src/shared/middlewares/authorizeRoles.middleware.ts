@@ -43,7 +43,7 @@ export function authorizeRoles(...allowedRoles: Role[]) {
       where: { id: userId },
     });
 
-    if (!user) {
+    if (!user || !user.active) {
       throw new AppError("Usuario não encontrado", 403);
     }
 

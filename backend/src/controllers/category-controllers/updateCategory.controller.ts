@@ -5,10 +5,10 @@ class UpdateCategoryController {
   async handle(req: Request, res: Response, next: NextFunction) {
     try {
       const id = req.params.id as string;
-      const { name } = req.body;
+      const { name, active } = req.body;
 
       const updateCategoryService = new UpdateCategoryService();
-      const result = await updateCategoryService.execute({ id, name });
+      const result = await updateCategoryService.execute({ id, name, active });
 
       return res.status(200).json(result);
     } catch (error) {

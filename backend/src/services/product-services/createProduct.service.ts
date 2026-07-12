@@ -19,11 +19,15 @@ class CreateProductService {
   }: CreateProductRequest) {
     const category = await prisma.category.findUnique({
       where: { id: category_id },
-      select: { id: true },
+      select: { id: true, active: true },
     });
 
     if (!category) {
       throw new AppError("Categoria não encontrada", HttpStatus.NOT_FOUND);
+    }
+
+    if (!category.active) {
+      throw new AppError("Categoria está desativada", HttpStatus.BAD_REQUEST);
     }
 
     const product = await prisma.product.create({

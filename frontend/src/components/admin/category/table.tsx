@@ -1,6 +1,9 @@
 'use client';
 
-import { deleteCategoriaAction } from '@/actions/categories';
+import {
+  deleteCategoriaAction,
+  setCategoriaActiveAction,
+} from '@/actions/categories';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -28,7 +31,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Categoria } from '@/lib/types/category.types';
-import { PencilIcon, PlusIcon, TrashIcon } from 'lucide-react';
+import { PencilIcon, PlusIcon, PowerIcon, TrashIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -70,6 +73,17 @@ export default function CategoriasTable({
     setOpen(false);
     setCategoryId('');
     setEditingId('');
+    router.refresh();
+  }
+
+  async function handleActivateCategoria(id: string) {
+    const result = await setCategoriaActiveAction(id, true);
+
+    if (!result.success) {
+      setDeleteError(result.message);
+      return;
+    }
+
     router.refresh();
   }
 
@@ -123,10 +137,20 @@ export default function CategoriasTable({
                     <TableCell>{categoria._count.products}</TableCell>
 
                     <TableCell>
-                      {categoria._count.products > 0 ? 'Ativo' : 'Inativo'}
+                      {categoria.active ? 'Ativo' : 'Inativo'}
                     </TableCell>
 
                     <TableCell className="flex flex-row justify-end gap-2 w-auto">
+                      {!categoria.active && (
+                        <Button
+                          className="p-4 m-0"
+                          variant="outline"
+                          onClick={() => handleActivateCategoria(categoria.id)}
+                        >
+                          Ativar
+                          <PowerIcon className="ml-2 h-3 w-4" />
+                        </Button>
+                      )}
                       <Button
                         className="p-4 m-0"
                         onClick={() => {
@@ -138,18 +162,20 @@ export default function CategoriasTable({
                         <PencilIcon className="ml-2 h-3 w-4" />
                       </Button>
 
-                      <Button
-                        className="p-4 m-0"
-                        variant="destructive"
-                        size="icon"
-                        onClick={() => {
-                          setOpen(true);
-                          setCategoryId(categoria.id);
-                          setDeleteError('');
-                        }}
-                      >
-                        <TrashIcon className="h-3 w-4" />
-                      </Button>
+                      {categoria.active && (
+                        <Button
+                          className="p-4 m-0"
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => {
+                            setOpen(true);
+                            setCategoryId(categoria.id);
+                            setDeleteError('');
+                          }}
+                        >
+                          <TrashIcon className="h-3 w-4" />
+                        </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -164,11 +190,11 @@ export default function CategoriasTable({
           <DialogContent className="sm:max-w-md space-y-4">
             <DialogHeader>
               <DialogTitle>
-                Tem certeza que deseja deletar esta categoria?
+                Tem certeza que deseja desativar esta categoria?
               </DialogTitle>
               <DialogDescription>
-                Esta ação não pode ser desfeita. Todos os produtos associados a
-                esta categoria serão afetados.
+                A categoria não aparecerá no cardápio. Os produtos e o histórico
+                de pedidos serão preservados.
               </DialogDescription>
             </DialogHeader>
             {deleteError && (
@@ -183,7 +209,7 @@ export default function CategoriasTable({
                 onClick={handleDeleteCategoria}
                 disabled={isDeleting}
               >
-                {isDeleting ? 'Deletando...' : 'Deletar'}
+                {isDeleting ? 'Desativando...' : 'Desativar'}
               </Button>
             </DialogFooter>
           </DialogContent>

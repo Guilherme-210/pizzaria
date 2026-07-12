@@ -13,6 +13,8 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
+  active: boolean;
+  image: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -41,6 +43,8 @@ export interface UserRegister {
     name: string;
     email: string;
     role: UserRole;
+    active: boolean;
+    image: string | null;
     createdAt: string;
   };
 }
