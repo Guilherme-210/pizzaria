@@ -1,8 +1,6 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
 import { Form } from '@/components/forms/form';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';

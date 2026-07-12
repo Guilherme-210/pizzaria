@@ -85,7 +85,11 @@ export async function registerAction(
 
     await setAccessToken(user.token);
 
-    return { success: true, error: null, redirectTo: '/login' };
+    return {
+      success: true,
+      error: null,
+      redirectTo: user.role === 'CUSTOMER' ? '/cardapio' : '/cozinha',
+    };
   } catch (error) {
     if (error instanceof Error) {
       return {
@@ -144,7 +148,11 @@ export async function loginAction(
 
     await setAccessToken(user.token);
 
-    return { success: true, error: null };
+    return {
+      success: true,
+      error: null,
+      redirectTo: user.role === 'CUSTOMER' ? '/cardapio' : '/cozinha',
+    };
   } catch (error) {
     const fields = { email, password };
 

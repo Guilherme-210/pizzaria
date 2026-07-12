@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { loginAction } from '@/actions/user/auth';
 
@@ -20,7 +21,14 @@ import { Form } from './form';
 import { BoxAlert } from '../ui/alert';
 
 export function LoginForm() {
+  const router = useRouter();
   const [state, formAction, isPending] = useActionState(loginAction, null);
+
+  useEffect(() => {
+    if (state?.success && state.redirectTo) {
+      router.replace(state.redirectTo);
+    }
+  }, [router, state]);
 
   return (
     <div>
@@ -31,7 +39,7 @@ export function LoginForm() {
       {state?.success && (
         <BoxAlert
           title={'Sucesso'}
-          description={'Cadastro realizado com sucesso.'}
+          description={'Login realizado com sucesso.'}
           type="success"
         />
       )}

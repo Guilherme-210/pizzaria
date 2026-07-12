@@ -10,7 +10,7 @@ import { UpdateUserController } from "@/controllers/users-controllers/updateUser
 //   updateUserSchema,
 // } from "@/schemas/user.schemas";
 // import { authorizeRoles } from "@/shared/middlewares/authorizeRoles.middleware";
-// import { isAuthenticated } from "@/shared/middlewares/isAutentecated.middleware";
+import { isAuthenticated } from "@/shared/middlewares/isAutentecated.middleware";
 // import { validateSchema } from "@/shared/middlewares/valedate.schemas";
 import { Router } from "express";
 
@@ -50,7 +50,7 @@ userRouter.get(
 
 userRouter.get(
   "/me",
-  // isAuthenticated,
+  isAuthenticated,
   getUserController.handle,
 );
 

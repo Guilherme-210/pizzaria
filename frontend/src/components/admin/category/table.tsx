@@ -31,7 +31,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Categoria } from '@/lib/types/category.types';
-import { PencilIcon, PlusIcon, PowerIcon, TrashIcon } from 'lucide-react';
+import { PencilIcon, PlusIcon, PowerIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -141,16 +141,24 @@ export default function CategoriasTable({
                     </TableCell>
 
                     <TableCell className="flex flex-row justify-end gap-2 w-auto">
-                      {!categoria.active && (
-                        <Button
-                          className="p-4 m-0"
-                          variant="outline"
-                          onClick={() => handleActivateCategoria(categoria.id)}
-                        >
-                          Ativar
-                          <PowerIcon className="ml-2 h-3 w-4" />
-                        </Button>
-                      )}
+                      <Button
+                        className="p-4 m-0"
+                        variant={categoria.active ? 'destructive' : 'outline'}
+                        onClick={() => {
+                          if (categoria.active) {
+                            setOpen(true);
+                            setCategoryId(categoria.id);
+                            setDeleteError('');
+                            return;
+                          }
+
+                          handleActivateCategoria(categoria.id);
+                        }}
+                      >
+                        {categoria.active ? 'Desativar' : 'Ativar'}
+                        <PowerIcon className="ml-2 h-3 w-4" />
+                      </Button>
+
                       <Button
                         className="p-4 m-0"
                         onClick={() => {
@@ -162,20 +170,6 @@ export default function CategoriasTable({
                         <PencilIcon className="ml-2 h-3 w-4" />
                       </Button>
 
-                      {categoria.active && (
-                        <Button
-                          className="p-4 m-0"
-                          variant="destructive"
-                          size="icon"
-                          onClick={() => {
-                            setOpen(true);
-                            setCategoryId(categoria.id);
-                            setDeleteError('');
-                          }}
-                        >
-                          <TrashIcon className="h-3 w-4" />
-                        </Button>
-                      )}
                     </TableCell>
                   </TableRow>
                 ))}
