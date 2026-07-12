@@ -19,6 +19,21 @@ export type MenuItem = {
   icon: ReactNode;
 };
 
+const customerMenuItems: MenuItem[] = [
+  { href: '/cardapio', label: 'Cardápio', icon: <PackageIcon /> },
+  { href: '/carrinho', label: 'Carrinho', icon: <ShoppingCartIcon /> },
+  {
+    href: '/meus-pedidos',
+    label: 'Meus Pedidos',
+    icon: <ClipboardListIcon />,
+  },
+  {
+    href: '/meus-dados',
+    label: 'Meus Dados',
+    icon: <ShieldCheckIcon />,
+  },
+];
+
 const kitchenMenuItems: MenuItem[] = [
   { href: '/cozinha', label: 'Cozinha', icon: <ChefHatIcon /> },
   {
@@ -29,7 +44,6 @@ const kitchenMenuItems: MenuItem[] = [
 ];
 
 const managerMenuItems: MenuItem[] = [
-  ...kitchenMenuItems,
   { href: '/admin/produtos', label: 'Produtos', icon: <PackageIcon /> },
   { href: '/admin/categorias', label: 'Categorias', icon: <TagIcon /> },
   { href: '/admin/mesas', label: 'Mesas', icon: <UtensilsIcon /> },
@@ -38,33 +52,21 @@ const managerMenuItems: MenuItem[] = [
     label: 'Relatórios',
     icon: <BarChart3Icon />,
   },
+  ...kitchenMenuItems,
 ];
 
 const adminMenuItems: MenuItem[] = [
-  ...managerMenuItems,
   { href: '/admin/usuarios', label: 'Usuários', icon: <UsersIcon /> },
   {
     href: '/admin/configuracoes',
     label: 'Configurações',
     icon: <SettingsIcon />,
   },
+  ...managerMenuItems,
 ];
 
 export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
-  CUSTOMER: [
-    { href: '/cardapio', label: 'Cardápio', icon: <PackageIcon /> },
-    { href: '/carrinho', label: 'Carrinho', icon: <ShoppingCartIcon /> },
-    {
-      href: '/meus-pedidos',
-      label: 'Meus Pedidos',
-      icon: <ClipboardListIcon />,
-    },
-    {
-      href: '/meus-dados',
-      label: 'Meus Dados',
-      icon: <ShieldCheckIcon />,
-    },
-  ],
+  CUSTOMER: customerMenuItems,
   ATTENDANT: kitchenMenuItems,
   KITCHEN: kitchenMenuItems,
   MANAGER: managerMenuItems,
