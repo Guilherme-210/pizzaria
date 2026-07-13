@@ -106,3 +106,33 @@ export const updateUserSchema = z.object({
       }
     }),
 });
+
+export const userIdSchema = z.object({
+  params: z.object({
+    id: z.uuid({ message: "O ID do usuário é inválido" }),
+  }),
+});
+
+export const updateManagedUserSchema = z.object({
+  params: z.object({
+    id: z.uuid({ message: "O ID do usuário é inválido" }),
+  }),
+  body: z
+    .object({
+      name: z
+        .string({ message: "O nome é obrigatório" })
+        .min(1, { message: "O nome é obrigatório" })
+        .optional(),
+      email: z
+        .string({ message: "O e-mail é obrigatório" })
+        .email({ message: "O e-mail é inválido" })
+        .optional(),
+      active: z.boolean({
+        message: "O status do usuário deve ser verdadeiro ou falso",
+      }).optional(),
+      image: z.string().trim().url({ message: "A imagem deve ser uma URL válida" }).nullable().optional(),
+    })
+    .refine((data) => Object.keys(data).length > 0, {
+      message: "Pelo menos um campo deve ser enviado",
+    }),
+});

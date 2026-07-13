@@ -1,8 +1,15 @@
+import ContentUsuariosPage from '@/components/admin/user/content-page';
+import { apiClient } from '@/lib/api';
+import { getAccessToken } from '@/lib/cookies/authCookies';
+import { requireUser } from '@/lib/auth';
+import { User } from '@/lib/types/user.types';
+
 export default async function UsuariosPage() {
+  await requireUser(['ADMIN', 'SUPER_ADMIN']);
+  const token = await getAccessToken();
+  const users = await apiClient<User[]>('/users', { token });
+
   return (
-    <main className="bg-app-background text-white min-h-screen flex flex-col items-center justify-center px-4 py-10">
-      <h1 className="text-4xl font-bold mb-4">Usuários</h1>
-      <p className="text-lg">Aqui você poderá gerenciar os usuários.</p>
-    </main>
+    <ContentUsuariosPage users={users} />
   );
 }
