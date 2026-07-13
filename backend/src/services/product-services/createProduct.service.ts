@@ -1,12 +1,14 @@
 import prisma from "@/lib/prisma";
 import { AppError, HttpStatus } from "@/shared/errors/AppError";
+import { uploadImage } from "@/utils/uploadImage";
 
 interface CreateProductRequest {
   name: string;
   price: number;
   description: string;
-  banner: string;
   category_id: string;
+  imageBuffer: Buffer;
+  imageName: string;
 }
 
 class CreateProductService {
@@ -14,8 +16,9 @@ class CreateProductService {
     name,
     price,
     description,
-    banner,
     category_id,
+    imageBuffer,
+    imageName,
   }: CreateProductRequest) {
     const category = await prisma.category.findUnique({
       where: { id: category_id },
@@ -30,12 +33,29 @@ class CreateProductService {
       throw new AppError("Categoria está desativada", HttpStatus.BAD_REQUEST);
     }
 
+    let bannerUrl: string;
+
+    try {
+      const result = await uploadImage({
+        imageBuffer,
+        folder: "products",
+        publicId: `${category_id}-${imageName.split(".")[0]}-${Date.now()}`,
+      });
+
+      bannerUrl = result.secure_url;
+    } catch {
+      throw new AppError(
+        "Erro ao enviar a imagem do produto",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const product = await prisma.product.create({
       data: {
         name,
         price,
         description,
-        banner,
+        banner: bannerUrl,
         category_id,
       },
       select: {

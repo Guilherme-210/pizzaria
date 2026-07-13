@@ -1,4 +1,5 @@
 import { UpdateUserService } from "@/services/users-services/updateUser.service";
+import { AppError } from "@/shared/errors/AppError";
 import { NextFunction, Request, Response } from "express";
 
 class UpdateUserController {
@@ -6,7 +7,13 @@ class UpdateUserController {
     try {
       const userId = req.userId as string;
 
-      const { name, email, password, active, image } = req.body;
+      const { name, email, password, active } = req.body;
+      const imageBuffer = req.file?.buffer;
+      const imageName = req.file?.originalname;
+
+      if (Object.keys(req.body).length === 0 && !imageBuffer && !imageName) {
+        throw new AppError("Informe ao menos um campo para atualizar", 400);
+      }
 
       const updateUserService = new UpdateUserService();
       const result = await updateUserService.execute({
@@ -15,7 +22,8 @@ class UpdateUserController {
         email,
         password,
         active,
-        image,
+        imageBuffer,
+        imageName,
       });
 
       return res.status(200).json(result);
@@ -26,4 +34,3 @@ class UpdateUserController {
 }
 
 export { UpdateUserController };
-

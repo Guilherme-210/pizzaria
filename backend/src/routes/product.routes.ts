@@ -12,8 +12,11 @@ import { authorizeRoles } from "@/shared/middlewares/authorizeRoles.middleware";
 import { isAuthenticated } from "@/shared/middlewares/isAutentecated.middleware";
 import { validateSchema } from "@/shared/middlewares/valedate.schemas";
 import { Router } from "express";
+import multer from "multer";
+import uploadConfig from "@/configs/multer";
 
 const productRouter = Router();
+const upload = multer(uploadConfig);
 
 const createProductController = new CreateProductController();
 const listProductsController = new ListProductsController();
@@ -41,6 +44,7 @@ productRouter.post(
   "/product",
   isAuthenticated,
   productManagementRoles,
+  upload.single("image"),
   validateSchema(createProductSchema),
   createProductController.handle,
 );
@@ -49,6 +53,7 @@ productRouter.put(
   "/product/:id",
   isAuthenticated,
   productManagementRoles,
+  upload.single("image"),
   validateSchema(updateProductSchema),
   updateProductController.handle,
 );
@@ -57,6 +62,7 @@ productRouter.patch(
   "/product/:id",
   isAuthenticated,
   productManagementRoles,
+  upload.single("image"),
   validateSchema(updateProductSchema),
   updateProductController.handle,
 );

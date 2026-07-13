@@ -71,25 +71,8 @@ export const updateUserSchema = z.object({
         .string({ message: "A senha deve ter no mínimo 6 caracteres" })
         .min(6, { message: "A senha deve ter no mínimo 6 caracteres" })
         .optional(),
-      image: z
-        .string()
-        .trim()
-        .url({ message: "A imagem deve ser uma URL válida" })
-        .nullable()
-        .optional(),
-    })
-    .refine((data) => Object.keys(data).length > 0, {
-      message: "Pelo menos um campo deve ser enviado",
     })
     .superRefine((data, ctx) => {
-      // Pelo menos um campo deve ser enviado
-      if (Object.keys(data).length === 0) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Pelo menos um campo deve ser enviado",
-        });
-      }
-
       // Se password foi enviada, confirmPassword é obrigatória
       if (data.password && !data.confirmPassword) {
         ctx.addIssue({
@@ -134,13 +117,18 @@ export const updateManagedUserSchema = z.object({
         .string({ message: "O e-mail é obrigatório" })
         .email({ message: "O e-mail é inválido" })
         .optional(),
-      active: z.boolean({
-        message: "O status do usuário deve ser verdadeiro ou falso",
-      }).optional(),
-      image: z.string().trim().url({ message: "A imagem deve ser uma URL válida" }).nullable().optional(),
+      active: z
+        .preprocess(
+          (value) => {
+            if (value === "true") return true;
+            if (value === "false") return false;
+            return value;
+          },
+          z.boolean({
+            message: "O status do usuário deve ser verdadeiro ou falso",
+          }),
+        )
+        .optional(),
       role: z.nativeEnum(Role).optional(),
-    })
-    .refine((data) => Object.keys(data).length > 0, {
-      message: "Pelo menos um campo deve ser enviado",
     }),
 });

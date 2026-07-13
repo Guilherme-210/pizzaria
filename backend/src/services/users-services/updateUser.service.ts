@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { AppError } from "@/shared/errors/AppError";
 import { hash } from "bcryptjs";
 import { Role } from "@/generated/prisma/enums";
+import { uploadImage } from "@/utils/uploadImage";
 
 interface IUpdateUserService {
   userId: string;
@@ -9,13 +10,24 @@ interface IUpdateUserService {
   email?: string;
   password?: string;
   active?: boolean;
-  image?: string | null;
+  imageBuffer?: Buffer;
+  imageName?: string;
   role?: Role;
   requesterId?: string;
 }
 
 class UpdateUserService {
-  async execute({ userId, name, email, password, active, image, role, requesterId }: IUpdateUserService) {
+  async execute({
+    userId,
+    name,
+    email,
+    password,
+    active,
+    imageBuffer,
+    imageName,
+    role,
+    requesterId,
+  }: IUpdateUserService) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
@@ -44,6 +56,22 @@ class UpdateUserService {
       }
     }
 
+    let imageUrl: string | undefined;
+
+    if (imageBuffer && imageName) {
+      try {
+        const image = await uploadImage({
+          imageBuffer,
+          folder: "users",
+          publicId: `${userId}-${imageName.split(".")[0]}-${Date.now()}`,
+        });
+
+        imageUrl = image.secure_url;
+      } catch {
+        throw new AppError("Erro ao enviar a imagem do usuário", 500);
+      }
+    }
+
     const data: {
       name?: string;
       email?: string;
@@ -57,7 +85,7 @@ class UpdateUserService {
     if (email) data.email = email;
     if (password) data.password = await hash(password, 10);
     if (active !== undefined) data.active = active;
-    if (image !== undefined) data.image = image;
+    if (imageUrl !== undefined) data.image = imageUrl;
     if (role !== undefined) data.role = role;
 
     const updatedUser = await prisma.user.update({

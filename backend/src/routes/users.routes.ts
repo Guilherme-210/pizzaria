@@ -17,8 +17,11 @@ import { authorizeRoles } from "@/shared/middlewares/authorizeRoles.middleware";
 import { isAuthenticated } from "@/shared/middlewares/isAutentecated.middleware";
 import { validateSchema } from "@/shared/middlewares/valedate.schemas";
 import { Router } from "express";
+import multer from "multer";
+import uploadConfig from "@/configs/multer";
 
 const userRouter = Router();
+const upload = multer(uploadConfig);
 
 const createUserController = new CreateUserController();
 const authUserController = new AuthUserController();
@@ -32,6 +35,7 @@ const resetManagedUserPasswordController =
 
 userRouter.post(
   "/users",
+  upload.single("image"),
   validateSchema(createUserSchema),
   createUserController.handle,
 );
@@ -60,6 +64,7 @@ userRouter.get("/me", isAuthenticated, getUserController.handle);
 userRouter.put(
   "/user",
   isAuthenticated,
+  upload.single("image"),
   validateSchema(updateUserSchema),
   updateUserController.handle,
 );
@@ -67,6 +72,7 @@ userRouter.put(
 userRouter.patch(
   "/user",
   isAuthenticated,
+  upload.single("image"),
   validateSchema(updateUserSchema),
   updateUserController.handle,
 );
@@ -75,6 +81,7 @@ userRouter.patch(
   "/management/users/:id",
   isAuthenticated,
   authorizeRoles("ADMIN", "SUPER_ADMIN"),
+  upload.single("image"),
   validateSchema(updateManagedUserSchema),
   updateManagedUserController.handle,
 );

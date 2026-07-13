@@ -6,11 +6,7 @@ export default {
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB
   },
-  fileFilter: (
-    _req: any,
-    file: Express.Multer.File,
-    cb: multer.FileFilterCallback,
-  ) => {
+  fileFilter: (_req: any, file: Express.Multer.File, cb: any) => {
     const allowedMimeTypes = [
       "image/jpeg",
       "image/jpg",

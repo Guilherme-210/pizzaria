@@ -4,11 +4,15 @@ import { ZodError } from "zod";
 const validateSchema = (schema: any) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse({
+      const validatedData = schema.parse({
         body: req.body,
         query: req.query,
         params: req.params,
       });
+
+      if (validatedData.body !== undefined) {
+        req.body = validatedData.body;
+      }
 
       return next();
     } catch (error) {

@@ -9,22 +9,23 @@ export const createProductSchema = z.object({
         message: "O nome do produto deve ter no mínimo 2 caracteres",
       }),
     price: z
-      .number({ message: "O preço do produto é obrigatório" })
-      .int({
-        message: "O preço do produto deve ser um número inteiro em centavos",
-      })
-      .positive({ message: "O preço do produto deve ser maior que zero" }),
+      .preprocess(
+        (value) =>
+          typeof value === "string" && value.trim() !== ""
+            ? Number(value)
+            : value,
+        z
+          .number({ message: "O preço do produto é obrigatório" })
+          .int({
+            message: "O preço do produto deve ser um número inteiro em centavos",
+          })
+          .positive({ message: "O preço do produto deve ser maior que zero" }),
+      ),
     description: z
       .string({ message: "A descrição do produto é obrigatória" })
       .trim()
       .min(2, {
         message: "A descrição do produto deve ter no mínimo 2 caracteres",
-      }),
-    banner: z
-      .string({ message: "O banner do produto é obrigatório" })
-      .trim()
-      .min(1, {
-        message: "O banner do produto é obrigatório",
       }),
     category_id: z
       .string({ message: "A categoria do produto é obrigatória" })
@@ -53,11 +54,18 @@ export const updateProductSchema = z.object({
         })
         .optional(),
       price: z
-        .number({ message: "O preço do produto deve ser um número" })
-        .int({
-          message: "O preço do produto deve ser um número inteiro em centavos",
-        })
-        .positive({ message: "O preço do produto deve ser maior que zero" })
+        .preprocess(
+          (value) =>
+            typeof value === "string" && value.trim() !== ""
+              ? Number(value)
+              : value,
+          z
+            .number({ message: "O preço do produto deve ser um número" })
+            .int({
+              message: "O preço do produto deve ser um número inteiro em centavos",
+            })
+            .positive({ message: "O preço do produto deve ser maior que zero" }),
+        )
         .optional(),
       description: z
         .string({ message: "A descrição do produto deve ser um texto" })
@@ -66,21 +74,22 @@ export const updateProductSchema = z.object({
           message: "A descrição do produto deve ter no mínimo 2 caracteres",
         })
         .optional(),
-      banner: z
-        .string({ message: "O banner do produto deve ser um texto" })
-        .trim()
-        .min(1, { message: "O banner do produto não pode estar vazio" })
-        .optional(),
       category_id: z
         .string({ message: "A categoria do produto deve ser um texto" })
         .trim()
         .uuid({ message: "A categoria do produto deve ser um UUID válido" })
         .optional(),
-      disabled: z.boolean({
-        message: "O status do produto deve ser verdadeiro ou falso",
-      }).optional(),
-    })
-    .refine((data) => Object.keys(data).length > 0, {
-      message: "Informe ao menos um campo para atualizar",
+      disabled: z
+        .preprocess(
+          (value) => {
+            if (value === "true") return true;
+            if (value === "false") return false;
+            return value;
+          },
+          z.boolean({
+            message: "O status do produto deve ser verdadeiro ou falso",
+          }),
+        )
+        .optional(),
     }),
 });

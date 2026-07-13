@@ -1,4 +1,5 @@
 import { CreateUserServices } from "@/services/users-services/createUser.service";
+import { AppError } from "@/shared/errors/AppError";
 import { NextFunction, Request, Response } from "express";
 
 interface ICreateUserController {
@@ -13,6 +14,13 @@ class CreateUserController {
     try {
       const { name, email, password, confirmPassword } =
         req.body as ICreateUserController;
+
+      const imageBuffer = req.file?.buffer;
+      const imageName = req.file?.originalname;
+
+      if (!imageBuffer || !imageName) {
+        throw new AppError("A imagem do usuário é obrigatória", 400);
+      }
 
       if (!name || !email || !password || !confirmPassword) {
         return res
@@ -29,6 +37,8 @@ class CreateUserController {
         name: name,
         email: email,
         password: password,
+        imageBuffer,
+        imageName,
       });
 
       return res.status(201).json(result);
