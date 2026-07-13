@@ -8,6 +8,7 @@ import { logoutAction } from '@/actions/user/auth';
 import SidebarLinkItem from './sidebarLinkItem';
 import { menuItemsByRole } from '@/lib/navigation/menu-items';
 import { User } from '@/lib/types/user.types';
+import { AvatarButton } from '@/components/user/avatar';
 
 interface SidebarProps {
   user: User;
@@ -21,6 +22,7 @@ export default function SidebarDesktop({
   menuItems = user ? menuItemsByRole[user.role] : [],
 }: SidebarProps) {
   const pathname = usePathname();
+  const avatar = typeof user.image === 'string' ? user.image : '';
 
   return (
     <aside className="hidden lg:flex flex-col w-64 border-b-app-border bg-[#080C1A] border-r-2 text-white min-h-screen p-4">
@@ -28,7 +30,11 @@ export default function SidebarDesktop({
         <h1 className="text-2xl font-bold mb-4">
           Sujeito<span className="text-red-500">Pizzaria</span>
         </h1>
-        <p className="text-sm text-gray-400">Olá, {userName}</p>
+
+        <div className="flex items-center gap-2 my-4">
+          <AvatarButton src={avatar} alt={userName} />
+          <p className="text-sm text-gray-400">Olá, {userName}</p>
+        </div>
       </div>
 
       <nav className="flex-1 flex-col p-4 space-y-4">

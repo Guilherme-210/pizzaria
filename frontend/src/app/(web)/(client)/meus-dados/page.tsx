@@ -11,7 +11,7 @@ export default async function MeusDadosPage() {
     <section className="mx-auto w-full max-w-2xl space-y-6 rounded-xl border border-white/10 bg-[#111728] p-6">
       <div>
         <h1 className="text-2xl font-bold">Meus dados</h1>
-        <p className="mt-1 text-sm text-white/60">Atualize suas informações pessoais e senha.</p>
+        <p className="mt-1 text-sm text-white/60">Atualize seu nome, e-mail, imagem de perfil e senha.</p>
       </div>
       <UserForm user={user} />
     </section>

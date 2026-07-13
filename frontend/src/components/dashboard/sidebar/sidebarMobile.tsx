@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { User } from '@/lib/types/user.types';
 import { menuItemsByRole } from '@/lib/navigation/menu-items';
 import SidebarLinkItem from './sidebarLinkItem';
+import { AvatarButton } from '@/components/user/avatar';
 
 interface SidebarProps {
   user: User;
@@ -32,6 +33,7 @@ export default function SidebarMobile({
 }: SidebarProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const avatar = typeof user.image === 'string' ? user.image : '';
 
   return (
     <aside className="lg:hidden">
@@ -87,7 +89,11 @@ export default function SidebarMobile({
           <h1 className="text-2xl font-bold">
             Sujeito<span className="text-red-500">Pizzaria</span>
           </h1>
-          <p className="text-sm text-gray-400">Olá, {userName}</p>
+
+          <div className="flex items-center gap-2 my-4">
+            <AvatarButton src={avatar} alt={userName} />
+            <p className="text-sm text-gray-400">Olá, {userName}</p>
+          </div>
         </div>
       </header>
     </aside>

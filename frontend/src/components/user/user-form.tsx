@@ -1,8 +1,6 @@
 'use client';
 
-import {
-  updateOwnUserAction,
-} from '@/actions/user/users';
+import { updateOwnUserAction } from '@/actions/user/users';
 import { Form } from '@/components/forms/form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,15 +13,12 @@ import { useForm } from 'react-hook-form';
 type UserFormValues = {
   name: string;
   email: string;
+  image: string;
   password: string;
   confirmPassword: string;
 };
 
-export default function UserForm({
-  user,
-}: {
-  user: User;
-}) {
+export default function UserForm({ user }: { user: User }) {
   const router = useRouter();
   const [submitError, setSubmitError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -35,6 +30,7 @@ export default function UserForm({
     defaultValues: {
       name: user.name,
       email: user.email,
+      image: user.image ?? '',
       password: '',
       confirmPassword: '',
     },
@@ -52,6 +48,7 @@ export default function UserForm({
     const formData = new FormData();
     formData.append('name', data.name.trim());
     formData.append('email', data.email.trim());
+    formData.append('image', data.image.trim());
     formData.append('password', data.password);
     formData.append('confirmPassword', data.confirmPassword);
 
@@ -69,17 +66,38 @@ export default function UserForm({
   return (
     <Form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
       <div className="grid gap-5 sm:grid-cols-2">
-        <div className="space-y-2">
+        <div className="space-y-2 sm:col-span-2">
           <Label htmlFor="user-name">Nome</Label>
           <Input
             id="user-name"
             aria-invalid={Boolean(errors.name)}
             {...register('name', { required: 'Informe o nome.' })}
           />
-          {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
+          {errors.name && (
+            <p className="text-sm text-destructive">{errors.name.message}</p>
+          )}
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 sm:col-span-2">
+          <Label htmlFor="user-image">URL da imagem de perfil</Label>
+          <Input
+            id="user-image"
+            type="url"
+            placeholder="https://exemplo.com/minha-foto.jpg"
+            aria-invalid={Boolean(errors.image)}
+            {...register('image', {
+              pattern: {
+                value: /^(|https?:\/\/\S+)$/,
+                message: 'Informe uma URL válida.',
+              },
+            })}
+          />
+          {errors.image && (
+            <p className="text-sm text-destructive">{errors.image.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-2 sm:col-span-2">
           <Label htmlFor="user-email">E-mail</Label>
           <Input
             id="user-email"
@@ -87,10 +105,15 @@ export default function UserForm({
             aria-invalid={Boolean(errors.email)}
             {...register('email', {
               required: 'Informe o e-mail.',
-              pattern: { value: /^\S+@\S+\.\S+$/, message: 'Informe um e-mail válido.' },
+              pattern: {
+                value: /^\S+@\S+\.\S+$/,
+                message: 'Informe um e-mail válido.',
+              },
             })}
           />
-          {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="text-sm text-destructive">{errors.email.message}</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -101,10 +124,17 @@ export default function UserForm({
             placeholder="Deixe em branco para manter"
             aria-invalid={Boolean(errors.password)}
             {...register('password', {
-              minLength: { value: 6, message: 'A senha deve ter ao menos 6 caracteres.' },
+              minLength: {
+                value: 6,
+                message: 'A senha deve ter ao menos 6 caracteres.',
+              },
             })}
           />
-          {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="text-sm text-destructive">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -119,8 +149,16 @@ export default function UserForm({
         </div>
       </div>
 
-      {submitError && <p className="text-sm text-destructive" role="alert">{submitError}</p>}
-      {successMessage && <p className="text-sm text-emerald-400" role="status">{successMessage}</p>}
+      {submitError && (
+        <p className="text-sm text-destructive" role="alert">
+          {submitError}
+        </p>
+      )}
+      {successMessage && (
+        <p className="text-sm text-emerald-400" role="status">
+          {successMessage}
+        </p>
+      )}
 
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? 'Salvando...' : 'Salvar alterações'}

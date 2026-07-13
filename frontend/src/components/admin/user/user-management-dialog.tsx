@@ -17,7 +17,14 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { User } from '@/lib/types/user.types';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { User, UserRole } from '@/lib/types/user.types';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -29,21 +36,34 @@ type ManagedUserFormValues = {
   active: boolean;
   password: string;
   confirmPassword: string;
+  role: UserRole;
+};
+
+const roleLabels: Record<UserRole, string> = {
+  CUSTOMER: 'Cliente',
+  ATTENDANT: 'Atendente',
+  KITCHEN: 'Cozinha',
+  MANAGER: 'Gerente',
+  ADMIN: 'Administrador',
+  SUPER_ADMIN: 'Super administrador',
 };
 
 export default function UserManagementDialog({
   isOpen,
   setOpen,
   user,
+  currentUser,
 }: {
   isOpen: boolean;
   setOpen: (open: boolean) => void;
   user: User | null;
+  currentUser: User;
 }) {
   const router = useRouter();
   const [submitError, setSubmitError] = useState('');
   const isEditing = user !== null;
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } =
+  const canManageSuperAdmins = currentUser.role === 'SUPER_ADMIN';
+  const { register, handleSubmit, reset, setValue, watch, formState: { errors, isSubmitting } } =
     useForm<ManagedUserFormValues>();
 
   useEffect(() => {
@@ -55,6 +75,7 @@ export default function UserManagementDialog({
       active: user?.active ?? true,
       password: '',
       confirmPassword: '',
+      role: user?.role ?? 'CUSTOMER',
     });
     setSubmitError('');
   }, [isOpen, reset, user]);
@@ -73,6 +94,7 @@ export default function UserManagementDialog({
     formData.append('active', String(data.active));
     formData.append('password', data.password);
     formData.append('confirmPassword', data.confirmPassword);
+    formData.append('role', data.role);
 
     const result = isEditing
       ? await updateManagedUserAction(formData, user.id)
@@ -105,6 +127,16 @@ export default function UserManagementDialog({
             {isEditing ? (
               <>
                 <div className="space-y-2 sm:col-span-2"><Label htmlFor="managed-user-image">URL da imagem</Label><Input id="managed-user-image" type="url" placeholder="https://..." {...register('image')} /></div>
+                <div className="space-y-2 sm:col-span-2">
+                  <Label htmlFor="managed-user-role">Função</Label>
+                  <Select value={watch('role')} onValueChange={(value) => setValue('role', value as UserRole)} disabled={!canManageSuperAdmins && user.role === 'SUPER_ADMIN'}>
+                    <SelectTrigger id="managed-user-role" className="w-full"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(roleLabels).map(([value, label]) => <SelectItem key={value} value={value} disabled={!canManageSuperAdmins && value === 'SUPER_ADMIN'}>{label}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  {!canManageSuperAdmins && user.role === 'SUPER_ADMIN' && <p className="text-sm text-white/60">Somente um super administrador pode alterar esta função.</p>}
+                </div>
                 <label className="flex items-center gap-2 text-sm sm:col-span-2"><input type="checkbox" {...register('active')} /> Usuário ativo</label>
               </>
             ) : (

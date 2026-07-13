@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Role } from "@/generated/prisma/enums";
 
 export const createUserSchema = z.object({
   body: z.object({
@@ -70,6 +71,12 @@ export const updateUserSchema = z.object({
         .string({ message: "A senha deve ter no mínimo 6 caracteres" })
         .min(6, { message: "A senha deve ter no mínimo 6 caracteres" })
         .optional(),
+      image: z
+        .string()
+        .trim()
+        .url({ message: "A imagem deve ser uma URL válida" })
+        .nullable()
+        .optional(),
     })
     .refine((data) => Object.keys(data).length > 0, {
       message: "Pelo menos um campo deve ser enviado",
@@ -131,6 +138,7 @@ export const updateManagedUserSchema = z.object({
         message: "O status do usuário deve ser verdadeiro ou falso",
       }).optional(),
       image: z.string().trim().url({ message: "A imagem deve ser uma URL válida" }).nullable().optional(),
+      role: z.nativeEnum(Role).optional(),
     })
     .refine((data) => Object.keys(data).length > 0, {
       message: "Pelo menos um campo deve ser enviado",

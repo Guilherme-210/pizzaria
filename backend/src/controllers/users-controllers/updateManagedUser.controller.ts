@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from "express";
 class UpdateManagedUserController {
   async handle(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, email, active, image } = req.body;
+      const { name, email, active, image, role } = req.body;
 
       const result = await new UpdateUserService().execute({
         userId: req.params.id as string,
@@ -12,6 +12,8 @@ class UpdateManagedUserController {
         email,
         active,
         image,
+        role,
+        requesterId: req.userId as string,
       });
 
       return res.status(200).json(result);

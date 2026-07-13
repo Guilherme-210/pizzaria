@@ -2,7 +2,7 @@
 
 import { apiClient } from '@/lib/api';
 import { getAccessToken } from '@/lib/cookies/authCookies';
-import { User, UserRegister } from '@/lib/types/user.types';
+import { User, UserRegister, UserRole } from '@/lib/types/user.types';
 import { revalidatePath } from 'next/cache';
 
 function getUpdatePayload(formData: FormData) {
@@ -12,6 +12,8 @@ function getUpdatePayload(formData: FormData) {
   return {
     name: String(formData.get('name') || '').trim(),
     email: String(formData.get('email') || '').trim(),
+    image: String(formData.get('image') || '').trim() || null,
+    role: String(formData.get('role') || '') as UserRole,
     ...(password && { password, confirmPassword }),
   };
 }
@@ -99,12 +101,12 @@ export async function resetManagedUserPasswordAction(id: string) {
   try {
     const token = await getAccessToken();
 
-    await apiClient<unknown>(`/management/users/${id}/reset-password`, {
+    const response = await apiClient<{ message: string; password: string }>(`/management/users/${id}/reset-password`, {
       method: 'PATCH',
       token,
     });
 
-    return { success: true, message: 'Senha redefinida para a senha padrão.' };
+    return { success: true, message: response.message, password: response.password };
   } catch (error) {
     return {
       success: false,
