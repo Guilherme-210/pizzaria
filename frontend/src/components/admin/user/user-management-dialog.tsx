@@ -32,7 +32,7 @@ import { useForm } from 'react-hook-form';
 type ManagedUserFormValues = {
   name: string;
   email: string;
-  image: string;
+  image: FileList;
   active: boolean;
   password: string;
   confirmPassword: string;
@@ -71,7 +71,6 @@ export default function UserManagementDialog({
     reset({
       name: user?.name ?? '',
       email: user?.email ?? '',
-      image: user?.image ?? '',
       active: user?.active ?? true,
       password: '',
       confirmPassword: '',
@@ -90,7 +89,8 @@ export default function UserManagementDialog({
     const formData = new FormData();
     formData.append('name', data.name.trim());
     formData.append('email', data.email.trim());
-    formData.append('image', data.image.trim());
+    const image = data.image?.item(0);
+    if (image) formData.append('image', image);
     formData.append('active', String(data.active));
     formData.append('password', data.password);
     formData.append('confirmPassword', data.confirmPassword);
@@ -126,7 +126,7 @@ export default function UserManagementDialog({
             <div className="space-y-2"><Label htmlFor="managed-user-email">E-mail</Label><Input id="managed-user-email" type="email" aria-invalid={Boolean(errors.email)} {...register('email', { required: 'Informe o e-mail.' })} />{errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}</div>
             {isEditing ? (
               <>
-                <div className="space-y-2 sm:col-span-2"><Label htmlFor="managed-user-image">URL da imagem</Label><Input id="managed-user-image" type="url" placeholder="https://..." {...register('image')} /></div>
+                <div className="space-y-2 sm:col-span-2"><Label htmlFor="managed-user-image">Nova foto de perfil (opcional)</Label><Input id="managed-user-image" type="file" accept="image/*" {...register('image')} /></div>
                 <div className="space-y-2 sm:col-span-2">
                   <Label htmlFor="managed-user-role">Função</Label>
                   <Select value={watch('role')} onValueChange={(value) => setValue('role', value as UserRole)} disabled={!canManageSuperAdmins && user.role === 'SUPER_ADMIN'}>
@@ -141,6 +141,7 @@ export default function UserManagementDialog({
               </>
             ) : (
               <>
+                <div className="space-y-2 sm:col-span-2"><Label htmlFor="managed-user-image">Foto de perfil (opcional)</Label><Input id="managed-user-image" type="file" accept="image/*" {...register('image')} /></div>
                 <div className="space-y-2"><Label htmlFor="managed-user-password">Senha inicial</Label><Input id="managed-user-password" type="password" aria-invalid={Boolean(errors.password)} {...register('password', { required: 'Informe a senha inicial.', minLength: { value: 6, message: 'Use ao menos 6 caracteres.' } })} />{errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}</div>
                 <div className="space-y-2"><Label htmlFor="managed-user-confirm-password">Confirmar senha</Label><Input id="managed-user-confirm-password" type="password" {...register('confirmPassword', { required: 'Confirme a senha.' })} /></div>
               </>

@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form';
 type UserFormValues = {
   name: string;
   email: string;
-  image: string;
+  image: FileList;
   password: string;
   confirmPassword: string;
 };
@@ -30,7 +30,6 @@ export default function UserForm({ user }: { user: User }) {
     defaultValues: {
       name: user.name,
       email: user.email,
-      image: user.image ?? '',
       password: '',
       confirmPassword: '',
     },
@@ -48,7 +47,8 @@ export default function UserForm({ user }: { user: User }) {
     const formData = new FormData();
     formData.append('name', data.name.trim());
     formData.append('email', data.email.trim());
-    formData.append('image', data.image.trim());
+    const image = data.image?.item(0);
+    if (image) formData.append('image', image);
     formData.append('password', data.password);
     formData.append('confirmPassword', data.confirmPassword);
 
@@ -79,18 +79,13 @@ export default function UserForm({ user }: { user: User }) {
         </div>
 
         <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="user-image">URL da imagem de perfil</Label>
+          <Label htmlFor="user-image">Nova foto de perfil</Label>
           <Input
             id="user-image"
-            type="url"
-            placeholder="https://exemplo.com/minha-foto.jpg"
+            type="file"
+            accept="image/*"
             aria-invalid={Boolean(errors.image)}
-            {...register('image', {
-              pattern: {
-                value: /^(|https?:\/\/\S+)$/,
-                message: 'Informe uma URL válida.',
-              },
-            })}
+            {...register('image')}
           />
           {errors.image && (
             <p className="text-sm text-destructive">{errors.image.message}</p>

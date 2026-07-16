@@ -2,12 +2,7 @@
 
 import { apiClient } from '@/lib/api';
 import { removeAccessToken, setAccessToken } from '@/lib/cookies/authCookies';
-import {
-  UserLogin,
-  UserLoginPayload,
-  UserRegister,
-  UserRegisterPayload,
-} from '@/lib/types/user.types';
+import { UserLogin, UserLoginPayload, UserRegister } from '@/lib/types/user.types';
 import { redirect } from 'next/navigation';
 
 type RegisterState = {
@@ -61,15 +56,17 @@ export async function registerAction(
       };
     }
 
-    const data: UserRegisterPayload = {
-      name,
-      email,
-      password,
-      confirmPassword,
-    };
+    const payload = new FormData();
+    payload.append('name', name);
+    payload.append('email', email);
+    payload.append('password', password);
+    payload.append('confirmPassword', confirmPassword);
+
+    const image = formData.get('image');
+    if (image instanceof File && image.size > 0) payload.append('image', image);
 
     await apiClient<UserRegister>('/users', {
-      body: JSON.stringify(data),
+      body: payload,
       method: 'POST',
     });
 

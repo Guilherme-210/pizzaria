@@ -34,7 +34,7 @@ type ProductFormValues = {
   name: string;
   price: number;
   description: string;
-  banner: string;
+  image: FileList;
   category_id: string;
 };
 
@@ -69,7 +69,6 @@ export default function ProductDialog({
       name: product?.name ?? '',
       price: product ? product.price / 100 : undefined,
       description: product?.description ?? '',
-      banner: product?.banner ?? '',
       category_id: product?.category_id ?? '',
     });
     setSubmitError('');
@@ -80,8 +79,10 @@ export default function ProductDialog({
     formData.append('name', data.name.trim());
     formData.append('price', String(data.price));
     formData.append('description', data.description.trim());
-    formData.append('banner', data.banner.trim());
     formData.append('category_id', data.category_id);
+
+    const image = data.image?.item(0);
+    if (image) formData.append('image', image);
 
     return formData;
   }
@@ -191,15 +192,19 @@ export default function ProductDialog({
             </div>
 
             <div className="space-y-2 sm:col-span-2">
-              <Label htmlFor="product-banner">URL da imagem</Label>
+              <Label htmlFor="product-image">
+                Imagem do produto{isEditing ? ' (opcional)' : ''}
+              </Label>
               <Input
-                id="product-banner"
-                type="url"
-                placeholder="https://..."
-                aria-invalid={Boolean(errors.banner)}
-                {...register('banner', { required: 'Informe a URL da imagem.' })}
+                id="product-image"
+                type="file"
+                accept="image/*"
+                aria-invalid={Boolean(errors.image)}
+                {...register('image', {
+                  required: isEditing ? false : 'Selecione uma imagem.',
+                })}
               />
-              {errors.banner && <p className="text-sm text-destructive">{errors.banner.message}</p>}
+              {errors.image && <p className="text-sm text-destructive">{errors.image.message}</p>}
             </div>
           </div>
 

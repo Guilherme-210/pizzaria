@@ -9,14 +9,17 @@ const PRODUCTS_PATH = '/admin/produtos';
 
 function getProductPayload(formData: FormData) {
   const price = Number(String(formData.get('price')).replace(',', '.'));
+  const image = formData.get('image');
 
-  return {
-    name: String(formData.get('name')).trim(),
-    price: Math.round(price * 100),
-    description: String(formData.get('description')).trim(),
-    banner: String(formData.get('banner')).trim(),
-    category_id: String(formData.get('category_id')),
-  };
+  const payload = new FormData();
+  payload.append('name', String(formData.get('name')).trim());
+  payload.append('price', String(Math.round(price * 100)));
+  payload.append('description', String(formData.get('description')).trim());
+  payload.append('category_id', String(formData.get('category_id')));
+
+  if (image instanceof File && image.size > 0) payload.append('image', image);
+
+  return payload;
 }
 
 export async function createProdutoAction(formData: FormData) {
@@ -26,7 +29,7 @@ export async function createProdutoAction(formData: FormData) {
     await apiClient<Produto>('/product', {
       method: 'POST',
       token,
-      body: JSON.stringify(getProductPayload(formData)),
+      body: getProductPayload(formData),
     });
 
     revalidatePath(PRODUCTS_PATH);
@@ -48,7 +51,7 @@ export async function editProdutoAction(formData: FormData, id: string) {
     await apiClient<Produto>(`/product/${id}`, {
       method: 'PUT',
       token,
-      body: JSON.stringify(getProductPayload(formData)),
+      body: getProductPayload(formData),
     });
 
     revalidatePath(PRODUCTS_PATH);

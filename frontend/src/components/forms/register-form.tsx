@@ -57,7 +57,7 @@ export function RegisterForm() {
           </CardHeader>
 
           <CardContent>
-            <Form action={formAction}>
+            <Form action={formAction} encType="multipart/form-data">
               <div className="space-y-2">
                 <Label htmlFor="name">Nome</Label>
                 <Input
@@ -107,6 +107,14 @@ export function RegisterForm() {
                   defaultValue={state?.fields?.confirmPassword || ''}
                   minLength={6}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="image">Foto de perfil (opcional)</Label>
+                <Input id="image" name="image" type="file" accept="image/*" />
+                <p className="text-xs text-white/60">
+                  Se não enviar uma foto, usaremos um avatar padrão.
+                </p>
               </div>
 
               <div>

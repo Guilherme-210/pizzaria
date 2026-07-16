@@ -7,8 +7,8 @@ interface ICreateUserServices {
   name: string;
   email: string;
   password: string;
-  imageBuffer: Buffer;
-  imageName: string;
+  imageBuffer?: Buffer;
+  imageName?: string;
 }
 
 class CreateUserServices {
@@ -31,18 +31,20 @@ class CreateUserServices {
 
     const passwordHash = await hash(password, 10);
 
-    let imageUrl: string;
+    let imageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=ea580c&color=ffffff&bold=true`;
 
-    try {
-      const image = await uploadImage({
-        imageBuffer,
-        folder: "users",
-        publicId: `${email.replace(/[^a-zA-Z0-9_-]/g, "-")}-${imageName.split(".")[0]}-${Date.now()}`,
-      });
+    if (imageBuffer && imageName) {
+      try {
+        const image = await uploadImage({
+          imageBuffer,
+          folder: "users",
+          publicId: `${email.replace(/[^a-zA-Z0-9_-]/g, "-")}-${imageName.split(".")[0]}-${Date.now()}`,
+        });
 
-      imageUrl = image.secure_url;
-    } catch {
-      throw new AppError("Erro ao enviar a imagem do usuário", 500);
+        imageUrl = image.secure_url;
+      } catch {
+        throw new AppError("Erro ao enviar a imagem do usuário", 500);
+      }
     }
 
     const user = await prisma.user.create({

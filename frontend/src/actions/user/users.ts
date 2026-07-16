@@ -9,22 +9,31 @@ function getUpdatePayload(formData: FormData) {
   const password = String(formData.get('password') || '');
   const confirmPassword = String(formData.get('confirmPassword') || '');
 
-  return {
-    name: String(formData.get('name') || '').trim(),
-    email: String(formData.get('email') || '').trim(),
-    image: String(formData.get('image') || '').trim() || null,
-    role: String(formData.get('role') || '') as UserRole,
-    ...(password && { password, confirmPassword }),
-  };
+  const payload = new FormData();
+  payload.append('name', String(formData.get('name') || '').trim());
+  payload.append('email', String(formData.get('email') || '').trim());
+  if (password) {
+    payload.append('password', password);
+    payload.append('confirmPassword', confirmPassword);
+  }
+
+  const image = formData.get('image');
+  if (image instanceof File && image.size > 0) payload.append('image', image);
+
+  return payload;
 }
 
 function getManagedUpdatePayload(formData: FormData) {
-  return {
-    name: String(formData.get('name') || '').trim(),
-    email: String(formData.get('email') || '').trim(),
-    active: formData.get('active') === 'true',
-    image: String(formData.get('image') || '').trim() || null,
-  };
+  const payload = new FormData();
+  payload.append('name', String(formData.get('name') || '').trim());
+  payload.append('email', String(formData.get('email') || '').trim());
+  payload.append('active', String(formData.get('active') === 'true'));
+  payload.append('role', String(formData.get('role') || '') as UserRole);
+
+  const image = formData.get('image');
+  if (image instanceof File && image.size > 0) payload.append('image', image);
+
+  return payload;
 }
 
 export async function updateOwnUserAction(formData: FormData) {
@@ -34,7 +43,7 @@ export async function updateOwnUserAction(formData: FormData) {
     await apiClient<User>('/user', {
       method: 'PATCH',
       token,
-      body: JSON.stringify(getUpdatePayload(formData)),
+      body: getUpdatePayload(formData),
     });
 
     revalidatePath('/meus-dados');
@@ -54,15 +63,19 @@ export async function createManagedUserAction(formData: FormData) {
     const password = String(formData.get('password') || '');
     const confirmPassword = String(formData.get('confirmPassword') || '');
 
+    const payload = new FormData();
+    payload.append('name', String(formData.get('name') || '').trim());
+    payload.append('email', String(formData.get('email') || '').trim());
+    payload.append('password', password);
+    payload.append('confirmPassword', confirmPassword);
+
+    const image = formData.get('image');
+    if (image instanceof File && image.size > 0) payload.append('image', image);
+
     await apiClient<UserRegister>('/users', {
       method: 'POST',
       token,
-      body: JSON.stringify({
-        name: String(formData.get('name') || '').trim(),
-        email: String(formData.get('email') || '').trim(),
-        password,
-        confirmPassword,
-      }),
+      body: payload,
     });
 
     revalidatePath('/admin/usuarios');
@@ -83,7 +96,7 @@ export async function updateManagedUserAction(formData: FormData, id: string) {
     await apiClient<User>(`/management/users/${id}`, {
       method: 'PATCH',
       token,
-      body: JSON.stringify(getManagedUpdatePayload(formData)),
+      body: getManagedUpdatePayload(formData),
     });
 
     revalidatePath('/admin/usuarios');

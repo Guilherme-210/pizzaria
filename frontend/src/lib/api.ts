@@ -123,10 +123,7 @@ export async function apiClient<T>(
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...fetchOptions,
     method: method || 'GET',
-    headers: {
-      'content-type': 'application/json',
-      ...Object.fromEntries(headers.entries()),
-    },
+    headers,
   });
 
   if (!response.ok) {
