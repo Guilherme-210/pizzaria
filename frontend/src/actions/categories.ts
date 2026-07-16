@@ -3,9 +3,38 @@
 import { apiClient } from '@/lib/api';
 import { getAccessToken } from '@/lib/cookies/authCookies';
 import { Categoria } from '@/lib/types/category.types';
+import { Produto } from '@/lib/types/product.types';
 import { revalidatePath } from 'next/cache';
 
 const CATEGORIES_PATH = '/admin/categorias';
+
+type CategoryWithProducts = Pick<
+  Categoria,
+  'id' | 'name' | 'active' | 'createdAt' | 'updatedAt'
+> & {
+  products: Produto[];
+};
+
+export async function getProductsByCategoryAction(categoryId: string) {
+  try {
+    const token = await getAccessToken();
+    const category = await apiClient<CategoryWithProducts>(`/category/${categoryId}`, {
+      token,
+    });
+
+    return { success: true, products: category.products };
+  } catch (error) {
+    if (error instanceof Error) {
+      return { success: false, message: error.message, products: [] };
+    }
+
+    return {
+      success: false,
+      message: 'Erro ao buscar os produtos da categoria.',
+      products: [],
+    };
+  }
+}
 
 export async function createCategoriaAction(formData: FormData) {
   try {

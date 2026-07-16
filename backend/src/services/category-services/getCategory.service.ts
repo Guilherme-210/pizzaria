@@ -19,6 +19,7 @@ class GetCategoryService {
             description: true,
             banner: true,
             disabled: true,
+            category_id: true,
             createdAt: true,
             updatedAt: true,
             category: {

@@ -20,6 +20,7 @@ export default function ContentProdutosPage({
     <div className="w-full">
       <ProductsTable
         produtos={produtos}
+        categorias={categorias}
         onCreate={() => setIsCreating(true)}
         onEdit={setEditingProduct}
       />
